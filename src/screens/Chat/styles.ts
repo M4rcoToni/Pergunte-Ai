@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
     paddingTop: '50%',
     color: THEME.COLORS.GRAY_200,
     alignSelf: 'center',
+    textAlign: 'center',
     fontSize: THEME.FONTS.SIZE.XL,
   }
 });

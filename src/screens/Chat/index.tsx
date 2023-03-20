@@ -39,8 +39,8 @@ export function Chat() {
         const responseText = data.choices[0].text;
         setResponse(prevResponses => [...prevResponses, prompt]);
         setResponse(prevResponses => [...prevResponses, responseText.trim()]);
-        console.log(data);
-
+        // console.log(data);
+        setDescription('');
 
       } else {
         console.log('Erro', 'Não foi possível.');
@@ -50,7 +50,6 @@ export function Chat() {
     }
     console.log(response);
     setEditable(true);
-    setDescription('');
   }
   console.log(response);
 
@@ -75,7 +74,7 @@ export function Chat() {
         ListEmptyComponent={() => (
 
           <Text style={styles.empty}>
-            Olá, eu sou o GPD, como posso te ajudar?
+            Olá, eu sou o GPT,{"\n"} como posso te ajudar?
           </Text>
         )}
       />
