@@ -5,6 +5,7 @@ import { styles } from './styles';
 import { THEME } from '../../theme/index';
 import { Feather } from '@expo/vector-icons';
 import { Input } from '../Input';
+import { Loading } from '../Loading/index';
 
 type Props = TextInputProps & {
   onClear?: () => void;
@@ -29,11 +30,17 @@ export function SendArea({ value, editable, onClear, ...rest }: Props) {
           style={styles.send}
           onPress={onClear}
         >
-          <Feather
-            name="send"
-            size={24}
-            color={THEME.COLORS.PRIMARY}
-          />
+          {
+            editable ?
+              <Feather
+                name="send"
+                size={24}
+                color={THEME.COLORS.PRIMARY}
+              />
+              :
+              <Loading />
+          }
+
         </TouchableOpacity>
       }
     </View>
