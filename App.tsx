@@ -1,20 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useFonts, NotoSans_400Regular, NotoSans_700Bold, NotoSans_800ExtraBold } from "@expo-google-fonts/noto-sans";
+import { Loading } from './src/components/Loading';
+import { Chat } from './src/screens/Chat';
 
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    NotoSans_400Regular,
+    NotoSans_700Bold,
+    NotoSans_800ExtraBold
+  });
+
+  if (!fontsLoaded) {
+    return (
+      <Loading />
+    )
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider >
+      <StatusBar
+        style="auto"
+        backgroundColor="transparent"
+        translucent
+      />
+      <Chat />
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
