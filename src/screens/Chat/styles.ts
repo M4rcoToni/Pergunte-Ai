@@ -16,26 +16,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 7
   },
-  scroll: {
-    flex: 1,
-    paddingY: 12,
-  },
-  description: {
-    padding: 12,
-    color: THEME.COLORS.GRAY_200,
-    backgroundColor: THEME.COLORS.GRAY_500,
-  },
-  responsee: {
-    padding: 12,
-    paddingLeft: 32,
-    color: THEME.COLORS.GRAY_200,
-    backgroundColor: THEME.COLORS.GRAY_400,
-  },
-  empty: {
-    paddingTop: '50%',
-    color: THEME.COLORS.GRAY_200,
-    alignSelf: 'center',
-    textAlign: 'center',
-    fontSize: THEME.FONTS.SIZE.XL,
-  }
+
+
 });

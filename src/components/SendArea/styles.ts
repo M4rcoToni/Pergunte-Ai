@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    width: '85%',
     height: 52,
     paddingStart: 22,
     paddingEnd: 22,
@@ -25,6 +24,5 @@ export const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 12,
   }
 });

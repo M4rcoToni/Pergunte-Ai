@@ -16,7 +16,7 @@ export function SendArea({ value, editable, onClear, ...rest }: Props) {
   return (
     <View style={styles.container}>
       <Input
-        style={[styles.input, { borderColor: isFocused ? THEME.COLORS.PRIMARY : THEME.COLORS.GRAY_400 }]}
+        style={[styles.input, { borderColor: isFocused ? THEME.COLORS.PRIMARY : THEME.COLORS.GRAY_400, width: value && value?.length > 0 ? '90%' : '100%' }]}
         placeholderTextColor={THEME.COLORS.GRAY_300}
         value={value}
         onFocus={() => setIsFocused(true)}
