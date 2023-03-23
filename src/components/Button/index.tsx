@@ -6,7 +6,10 @@ import { Feather } from '@expo/vector-icons';
 
 export function Button() {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      activeOpacity={0.7}
+    >
       <Feather
         name="plus"
         size={18}

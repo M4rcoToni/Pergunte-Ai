@@ -17,9 +17,6 @@ export function Modal({ onClose, ...rest }: Props) {
         <View style={styles.content}>
           <View style={styles.header}>
 
-            <Text style={styles.title}>
-              aaa
-            </Text>
             <Feather
               name="x"
               size={30}

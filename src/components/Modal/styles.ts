@@ -9,8 +9,8 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingBottom: 16,
   },
   content: {
     height: '100%',
