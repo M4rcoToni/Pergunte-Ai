@@ -23,7 +23,7 @@ jobs:
           npm install -g eas-cli
 
       - name: Authenticate with EAS
-        run: eas login --username ${{ secrets.EAS_USERNAME }} --password ${{ secrets.EAS_PASSWORD }}
+        run: eas login --username ${{ secrets.EAS_USERNAME }} --password ${{ secrets.EAS_PASSWORD }} --non-interactive
 
       - name: Deploy to EAS
         run: eas update --branch preview --message "Deploy"
