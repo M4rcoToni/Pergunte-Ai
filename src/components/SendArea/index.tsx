@@ -6,6 +6,8 @@ import { THEME } from '../../theme/index';
 import { Feather } from '@expo/vector-icons';
 import { Input } from '../Input';
 import { Loading } from '../Loading/index';
+import { MotiView, } from 'moti';
+import { BounceIn } from 'react-native-reanimated';
 
 type Props = TextInputProps & {
   onClear?: () => void;
@@ -13,16 +15,29 @@ type Props = TextInputProps & {
 
 export function SendArea({ value, editable, onClear, ...rest }: Props) {
   const [isFocused, setIsFocused] = useState(false);
+
   return (
     <View style={styles.container}>
-      <Input
-        style={[styles.input, { borderColor: isFocused ? THEME.COLORS.PRIMARY : THEME.COLORS.GRAY_400, width: value && value?.length > 0 ? '90%' : '100%' }]}
-        placeholderTextColor={THEME.COLORS.GRAY_300}
-        value={value}
-        onFocus={() => setIsFocused(true)}
-        editable={editable}
-        {...rest}
-      />
+
+      <MotiView
+
+        animate={{
+          width: value && value?.length > 0 ? '90%' : '100%',
+        }}
+        transition={{
+          type: 'timing',
+          duration: 350,
+        }}
+      >
+        <Input
+          style={[styles.input, { borderColor: isFocused ? THEME.COLORS.PRIMARY : THEME.COLORS.GRAY_400 }]}
+          placeholderTextColor={THEME.COLORS.GRAY_300}
+          value={value}
+          onFocus={() => setIsFocused(true)}
+          editable={editable}
+          {...rest}
+        />
+      </MotiView>
 
       {
         value && value?.length > 0 &&
@@ -30,19 +45,26 @@ export function SendArea({ value, editable, onClear, ...rest }: Props) {
           style={styles.send}
           onPress={onClear}
         >
-          {
-            editable ?
-              <Feather
-                name="send"
-                size={24}
-                color={THEME.COLORS.PRIMARY}
-              />
-              :
-              <Loading />
-          }
+          <MotiView
+            from={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            delay={250}
+          >
+            {
+              editable ?
+                <Feather
+                  name="send"
+                  size={24}
+                  color={THEME.COLORS.PRIMARY}
+                />
+                :
+                <Loading />
+            }
 
+          </MotiView>
         </TouchableOpacity>
       }
+
     </View>
   );
 }

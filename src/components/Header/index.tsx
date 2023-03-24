@@ -12,7 +12,6 @@ export function Header() {
   return (
     <View style={styles.container}>
       <Modal
-        animationType='fade'
         visible={modalVisible}
         onClose={handleOpenModal}
       />
