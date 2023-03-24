@@ -4,6 +4,8 @@ import { View, Modal as ReactNativeModal, ModalProps, Text } from 'react-native'
 import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
 import { Button } from './Button';
+import { ChatsArea } from './ChatsArea';
+import { Footer } from './Footer';
 type Props = ModalProps & {
   onClose?: () => void;
 }
@@ -25,9 +27,11 @@ export function Modal({ onClose, ...rest }: Props) {
             />
           </View>
 
-          <View >
-            <Button />
-          </View>
+          <Button />
+
+          <ChatsArea />
+
+          <Footer />
 
         </View>
       </View>

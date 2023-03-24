@@ -25,8 +25,5 @@ jobs:
       - name: Authenticate with EAS
         run: eas login --username ${{ secrets.EAS_USERNAME }} --password ${{ secrets.EAS_PASSWORD }}
 
-      - name: Build project
-        run: eas build --platform all --profile preview
-
       - name: Deploy to EAS
-        run: eas submit --platform all --profile preview --skip-confirmation
+        run: eas update --branch preview --message "Deploy"

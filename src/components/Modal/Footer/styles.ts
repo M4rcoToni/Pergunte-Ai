@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { THEME } from '../../../theme/index';
+import { THEME } from '../../../theme';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginVertical: 14,
+    borderTopWidth: 0.2,
+    borderTopColor: THEME.COLORS.GRAY_200,
   },
-  chat: {
+  area: {
     flexDirection: 'row',
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 12,
     alignItems: 'center',
   },
   text: {
@@ -17,6 +17,5 @@ export const styles = StyleSheet.create({
     fontFamily: THEME.FONTS.FAMILY.PRIMARY.REGULAR,
     fontSize: THEME.FONTS.SIZE.MD,
     paddingHorizontal: 16,
-    paddingBottom: 8,
   }
 });
