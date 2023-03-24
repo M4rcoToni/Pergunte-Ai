@@ -3,7 +3,7 @@ import { View, Modal as ReactNativeModal, ModalProps, Text } from 'react-native'
 
 import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
-import { Button } from '../Button';
+import { Button } from './Button';
 type Props = ModalProps & {
   onClose?: () => void;
 }

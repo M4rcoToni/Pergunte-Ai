@@ -1,0 +1,32 @@
+name: EAS Deploy
+
+on:
+  push:
+    branches:
+      - main # ou outra branch de sua preferência
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install -g eas-cli
+
+      - name: Authenticate with EAS
+        run: eas login --username ${{ secrets.EAS_USERNAME }} --password ${{ secrets.EAS_PASSWORD }}
+
+      - name: Build project
+        run: eas build --platform all --profile preview
+
+      - name: Deploy to EAS
+        run: eas submit --platform all --profile preview --skip-confirmation
