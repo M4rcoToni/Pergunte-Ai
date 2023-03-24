@@ -24,8 +24,8 @@ jobs:
 
       - name: Authenticate with EAS
         run: eas login 
-        run: echo -e "${{ secrets.EAS_USERNAME }}"
-        run: echo -e "${{ secrets.EAS_PASSWORD }}"
+        uses: echo -e "${{ secrets.EAS_USERNAME }}"
+        uses: echo -e "${{ secrets.EAS_PASSWORD }}"
 
       - name: Deploy to EAS
         run: eas update --branch preview --message "Deploy"
