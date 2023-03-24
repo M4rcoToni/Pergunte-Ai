@@ -1,12 +1,12 @@
-name: EAS Deploy
+name: Deploy to EAS
 
 on:
   push:
     branches:
-      - main # ou outra branch de sua preferência
+      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,12 +18,12 @@ jobs:
           node-version: '14.x'
 
       - name: Install dependencies
-        run: |
-          npm install
-          npm install -g eas-cli
+        run: npm install
 
       - name: Authenticate with EAS
         run: eas login --username ${{ secrets.EAS_USERNAME }} --password ${{ secrets.EAS_PASSWORD }}
 
-      - name: Deploy to EAS
-        run: eas update --branch preview --message "Deploy"
+      - name: Build and deploy
+        run: |
+          eas build --platform ios --profile preview
+          eas build --platform android --profile preview
