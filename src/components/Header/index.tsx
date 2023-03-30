@@ -5,24 +5,21 @@ import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
 import { THEME } from '../../theme/index';
 import { Modal } from '../Modal/Index';
+type Props = {
+  onPress: () => void;
+}
 
-export function Header() {
-  const [modalVisible, setModalVisible] = useState(false);
-  const handleOpenModal = () => { setModalVisible(prev => !prev); };
+export function Header({ onPress }: Props) {
   return (
     <View style={styles.container}>
-      <Modal
-        visible={modalVisible}
-        onClose={handleOpenModal}
-      />
 
       <View >
-        <Text style={styles.title}>Chat</Text>
+        <Text style={styles.title}>ChatGPT</Text>
       </View>
 
       <View >
         <TouchableOpacity
-          onPress={handleOpenModal}
+          onPress={onPress}
         >
           <Feather name="menu" size={30} color={THEME.COLORS.GRAY_300} />
         </TouchableOpacity>

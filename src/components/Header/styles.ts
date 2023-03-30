@@ -15,10 +15,11 @@ export const styles = StyleSheet.create({
   },
   title: {
     alignItems: 'flex-start',
-    paddingHorizontal: 32,
+    paddingHorizontal: 16,
     color: THEME.COLORS.GRAY_200,
     fontSize: THEME.FONTS.SIZE.XXL,
     fontWeight: 'bold',
+    letterSpacing: 2
   },
 
 });

@@ -3,22 +3,18 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native';
 
 import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-interface Item {
+export interface ChatProps {
   title: string;
-  icon: string;
+  chatid: string;
+}
+type Props = {
+  items?: ChatProps[];
 }
 
-
-export function ChatsArea() {
-  const icon = "message-square";
-
-  const items: Item[] = [
-    { title: "Expo dev.", icon },
-    { title: "Listagem em Tópicos.", icon },
-    { title: "Expense Array Creation.", icon },
-    { title: "Context API no React.", icon },
-  ];
+export function ChatsArea({ items }: Props) {
+  const navigation = useNavigation();
 
   return (
     <FlatList style={styles.container}
@@ -28,8 +24,9 @@ export function ChatsArea() {
         <TouchableOpacity
           style={styles.chat}
           activeOpacity={0.7}
+          onPress={() => navigation.navigate('Chat' as never, { chatid: item.chatid } as never)}
         >
-          <Feather name={item.icon} size={20} color="#737380" />
+          <Feather name={"message-square"} size={20} color="#737380" />
           <Text style={styles.text}>{item.title}</Text>
         </TouchableOpacity>
       )}

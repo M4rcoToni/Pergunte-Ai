@@ -7,10 +7,20 @@ import { Button } from './Button';
 import { ChatsArea } from './ChatsArea';
 import { Footer } from './Footer';
 import { MotiView } from 'moti';
+import { useNavigation } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
+import { ChatProps } from './ChatsArea/index';
+
+
 type Props = ModalProps & {
+  item?: ChatProps[];
   onClose?: () => void;
 }
-export function Modal({ onClose, ...rest }: Props) {
+
+export function Modal({ item, onClose, ...rest }: Props) {
+  const navigation = useNavigation();
+  const id = uuid.v4();
+
   return (
     <ReactNativeModal
       {...rest}
@@ -37,9 +47,11 @@ export function Modal({ onClose, ...rest }: Props) {
             />
           </View>
 
-          <Button />
+          <Button
+            onPress={() => navigation.navigate('Chat' as never, { chatid: id } as never)}
+          />
 
-          <ChatsArea />
+          <ChatsArea items={item} />
 
           <Footer />
 

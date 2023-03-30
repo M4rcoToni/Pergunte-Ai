@@ -1,23 +1,37 @@
-import React, { useState } from 'react';
-import { Text, SafeAreaView, View, ScrollView, FlatList } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { Text, SafeAreaView, View } from 'react-native';
 import { ChatText } from '../../components/ChatText';
 import { Header } from '../../components/Header';
 import { SendArea } from '../../components/SendArea';
 
 import { styles } from './styles';
-
+import { ChatParams } from '../../@types/navigation';
+import { Modal } from '../../components/Modal/Index';
+import { ChatProps } from '../../components/Modal/ChatsArea/index';
+import uuid from 'react-native-uuid';
 const CHAT_GPD_API_KEY = process.env.CHAT_GPD_API_KEY;
 
 export function Chat() {
-
+  const route = useRoute();
+  const game = route.params as ChatParams;
+  if (game)
+    console.log(game.chatid);
   const [description, setDescription] = useState('');
+  const [firstUuid, setUuid] = useState('');
   const [editable, setEditable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<string[]>([]);
+  const [firstResponse, setFirstResponse] = useState<string | undefined>();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleOpenModal = () => { setModalVisible(prev => !prev); };
 
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
-
+    const id = uuid.v4();
+    setUuid(id.toString())
+    setFirstResponse(prompt); // 
     setResponse(prevResponses => [...prevResponses, prompt]);
     setResponse(prevResponses => [...prevResponses, prompt.trim()]);
     // console.log(data);
@@ -54,12 +68,26 @@ export function Chat() {
     // console.log(response);
     // setEditable(true);
   }
-  console.log(response);
+
+  const newChat: ChatProps[] = firstResponse ? [
+    {
+      title: firstResponse,
+      chatid: firstUuid,
+    }
+  ] : [];
 
   return (
     <SafeAreaView style={styles.container}>
+      <Modal
+        visible={modalVisible}
+        onClose={handleOpenModal}
+        item={newChat} />
+      <Header
+        onPress={handleOpenModal}
+      />
 
-      <Header />
+
+      {/* loading */}
       <ChatText data={response} />
 
       <View style={styles.content} >

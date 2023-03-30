@@ -4,6 +4,7 @@ import { Loading } from './src/components/Loading';
 import { Chat } from './src/screens/Chat';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Routes } from './src/routes/index';
 export default function App() {
   const [fontsLoaded] = useFonts({
     NotoSans_400Regular,
@@ -24,7 +25,7 @@ export default function App() {
         backgroundColor="transparent"
         translucent
       />
-      <Chat />
+      <Routes />
     </SafeAreaProvider>
   );
 }
