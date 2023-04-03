@@ -6,17 +6,22 @@ import { Header } from '../../components/Header';
 import { SendArea } from '../../components/SendArea';
 
 import { styles } from './styles';
-import { ChatParams } from '../../@types/navigation';
 import { Modal } from '../../components/Modal/Index';
 import { ChatProps } from '../../components/Modal/ChatsArea/index';
 import uuid from 'react-native-uuid';
+
+type RouteParams = {
+  chatid: string;
+}
+
 const CHAT_GPD_API_KEY = process.env.CHAT_GPD_API_KEY;
 
 export function Chat() {
   const route = useRoute();
-  const game = route.params as ChatParams;
+  const game = route.params as RouteParams;
   if (game)
     console.log(game.chatid);
+
   const [description, setDescription] = useState('');
   const [firstUuid, setUuid] = useState('');
   const [editable, setEditable] = useState(true);

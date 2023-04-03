@@ -1,12 +1,9 @@
-export interface ChatParams {
-  chatid: string;
-}
-
-
 export declare global {
   namespace ReactNavigation {
-    interface RootParamlist {
-      Chat: ChatParams;
+    interface RootParamList {
+      Chat: {
+        chatid: string;
+      };
     }
   }
 }

@@ -48,7 +48,7 @@ export function Modal({ item, onClose, ...rest }: Props) {
           </View>
 
           <Button
-            onPress={() => navigation.navigate('Chat' as never, { chatid: id } as never)}
+            onPress={() => navigation.navigate('Chat', { chatid: id.toString() })}
           />
 
           <ChatsArea items={item} />

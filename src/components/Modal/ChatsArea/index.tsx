@@ -24,7 +24,7 @@ export function ChatsArea({ items }: Props) {
         <TouchableOpacity
           style={styles.chat}
           activeOpacity={0.7}
-          onPress={() => navigation.navigate('Chat' as never, { chatid: item.chatid } as never)}
+          onPress={() => navigation.navigate('Chat', { chatid: item.chatid })}
         >
           <Feather name={"message-square"} size={20} color="#737380" />
           <Text style={styles.text}>{item.title}</Text>
