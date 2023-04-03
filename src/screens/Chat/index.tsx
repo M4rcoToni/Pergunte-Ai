@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { Text, SafeAreaView, View, Alert } from 'react-native';
 import { ChatText } from '../../components/ChatText';
 import { Header } from '../../components/Header';
 import { SendArea } from '../../components/SendArea';
@@ -9,6 +9,9 @@ import { styles } from './styles';
 import { Modal } from '../../components/Modal/Index';
 import { ChatProps } from '../../components/Modal/ChatsArea/index';
 import uuid from 'react-native-uuid';
+import { chatCreate } from '../../storage/chat/chatCreate';
+import { ChatStorageDTO } from '../../storage/chat/ChatStorageDTO';
+import { chatGetAll } from '../../storage/chat/chatGetAll';
 
 type RouteParams = {
   chatid: string;
@@ -32,14 +35,36 @@ export function Chat() {
   const [modalVisible, setModalVisible] = useState(false);
   const handleOpenModal = () => { setModalVisible(prev => !prev); };
 
+  const newChat: ChatStorageDTO[] = firstResponse ? [
+    {
+      title: firstResponse,
+      chatid: firstUuid,
+      data: response
+    }
+  ] : [];
+
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
     const id = uuid.v4();
-    setUuid(id.toString())
-    setFirstResponse(prompt); // 
-    setResponse(prevResponses => [...prevResponses, prompt]);
-    setResponse(prevResponses => [...prevResponses, prompt.trim()]);
-    // console.log(data);
+
+    if (!firstResponse) {
+      setUuid(id.toString())
+      setFirstResponse(prompt);
+    }
+
+    try {
+      if (prompt.trim().length === 0) {
+        Alert.alert('ChatGPT', 'Digite uma pergunta');
+      }
+
+      setResponse(prevResponses => [...prevResponses, prompt]);
+      setResponse(prevResponses => [...prevResponses, prompt.trim()]);
+
+      await chatCreate(newChat[0], firstUuid)
+    } catch (error) {
+      console.log(error);
+    }
+
     setDescription('');
 
     // setEditable(false);
@@ -74,19 +99,31 @@ export function Chat() {
     // setEditable(true);
   }
 
-  const newChat: ChatProps[] = firstResponse ? [
-    {
-      title: firstResponse,
-      chatid: firstUuid,
+  async function fechtData() {
+    try {
+      if (firstUuid) {
+        const chatData = await chatGetAll(game.chatid ? game.chatid : firstUuid);
+
+        const response = chatData.data;
+        console.log('GET IN CHAT', response)
+        setResponse(response)
+      }
+
+    } catch (error) {
+      console.log('get error', error);
     }
-  ] : [];
+  }
+  useEffect(() => {
+
+    fechtData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <Modal
         visible={modalVisible}
         onClose={handleOpenModal}
-        item={newChat} />
+        item={newChat[0]} />
       <Header
         onPress={handleOpenModal}
       />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, View, Text, TouchableOpacity } from 'react-native';
 
 import { styles } from './styles';
@@ -19,7 +19,7 @@ export function ChatsArea({ items }: Props) {
   return (
     <FlatList style={styles.container}
       data={items}
-      keyExtractor={item => item.title}
+      keyExtractor={item => item.chatid}
       renderItem={({ item }) => (
         <TouchableOpacity
           style={styles.chat}
