@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { View, Modal as ReactNativeModal, ModalProps, Text } from 'react-native';
 import { styles } from './styles';
@@ -9,9 +9,10 @@ import { ChatProps } from './ChatsArea/index';
 
 import { Feather } from '@expo/vector-icons';
 import { MotiView } from 'moti';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
-
+import { chatGetAll } from '../../storage/chat/chatGetAll';
+import { messageCreate } from '../../storage/message/messageCreate';
 
 type Props = ModalProps & {
   item: ChatProps;
@@ -32,8 +33,23 @@ export function Modal({ item, onClose, ...rest }: Props) {
       chatid: id.toString(),
     }])
     navigation.navigate('Chat', { chatid: id.toString() })
+    addFirstItem()
+    console.log('Modal', message);
+
   }
-  //adicionar logica de firsresponse
+  // navigation.navigate('Chat', { chatid: id.toString() })
+
+
+  async function addFirstItem() {
+    try {
+      await messageCreate(message);
+    } catch (error) {
+      console.log('Modal', error);
+    }
+
+  }
+
+
   return (
     <ReactNativeModal
       {...rest}
@@ -64,7 +80,7 @@ export function Modal({ item, onClose, ...rest }: Props) {
             onPress={handelCreateItem}
           />
 
-          <ChatsArea items={message} />
+          <ChatsArea />
 
           <Footer />
 

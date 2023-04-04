@@ -12,6 +12,7 @@ import uuid from 'react-native-uuid';
 import { chatCreate } from '../../storage/chat/chatCreate';
 import { ChatStorageDTO } from '../../storage/chat/ChatStorageDTO';
 import { chatGetAll } from '../../storage/chat/chatGetAll';
+import { messageCreate } from '../../storage/message/messageCreate';
 
 type RouteParams = {
   chatid: string;
@@ -23,7 +24,7 @@ export function Chat() {
   const route = useRoute();
   const game = route.params as RouteParams;
   if (game)
-    console.log(game.chatid);
+    console.log("id", game.chatid);
 
   const [description, setDescription] = useState('');
   const [firstUuid, setUuid] = useState('');
@@ -117,6 +118,7 @@ export function Chat() {
 
     fechtData();
   }, []);
+  // console.log('Chat', newChat);
 
   return (
     <SafeAreaView style={styles.container}>
