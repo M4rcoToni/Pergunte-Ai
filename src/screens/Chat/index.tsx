@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, View, Alert } from 'react-native';
+import { Text, SafeAreaView, View, Alert, TouchableOpacity } from 'react-native';
 import { ChatText } from '../../components/ChatText';
 import { Header } from '../../components/Header';
 import { SendArea } from '../../components/SendArea';
@@ -22,9 +22,9 @@ const CHAT_GPD_API_KEY = process.env.CHAT_GPD_API_KEY;
 
 export function Chat() {
   const route = useRoute();
-  const game = route.params as RouteParams;
-  if (game)
-    console.log("id", game.chatid);
+  const param = route.params as RouteParams;
+  if (param)
+    console.log("id", param.chatid);
 
   const [description, setDescription] = useState('');
   const [firstUuid, setUuid] = useState('');
@@ -102,13 +102,13 @@ export function Chat() {
 
   async function fechtData() {
     try {
-      if (firstUuid) {
-        const chatData = await chatGetAll(game.chatid ? game.chatid : firstUuid);
 
-        const response = chatData.data;
-        console.log('GET IN CHAT', response)
-        setResponse(response)
-      }
+      const chatData = await chatGetAll(param.chatid ? param.chatid : firstUuid);
+
+      const response = chatData.data;
+      console.log('GET IN CHAT', response)
+      setResponse(response)
+
 
     } catch (error) {
       console.log('get error', error);
@@ -133,13 +133,27 @@ export function Chat() {
 
       {/* loading */}
       <ChatText data={response} />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
+        <TouchableOpacity
+          onPress={fechtData}
+        >
+          <Text>GET</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={fechtData}
+        >
+          <Text>Set</Text>
+        </TouchableOpacity>
+      </View>
+
 
       <View style={styles.content} >
         <SendArea
           placeholder='Digite sua pergunta'
           value={description}
           onChangeText={setDescription}
-          onClear={handlefetchDataOpenAi}
+          // onClear={handlefetchDataOpenAi}
           editable={editable}
         />
       </View>

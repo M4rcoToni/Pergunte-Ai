@@ -10,6 +10,7 @@ export interface ChatProps {
   title: string;
   chatid: string;
 }
+
 type Props = {
   items: ChatProps[];
 }
@@ -17,6 +18,7 @@ type Props = {
 export function ChatsArea() {
   const navigation = useNavigation();
   const [message, setMessage] = useState<ChatProps[]>([]);
+
   async function fetchMessagesData() {
     try {
       const data = await messageGetAll();
@@ -27,13 +29,15 @@ export function ChatsArea() {
       console.log('CHAT AREA', error);
     }
   }
+
   useEffect(() => {
     fetchMessagesData()
   }, []);
 
   return (
     <>
-      {message !== undefined &&
+      {
+        message !== undefined &&
         <FlatList style={styles.container}
           data={message}
           keyExtractor={item => item.chatid}
