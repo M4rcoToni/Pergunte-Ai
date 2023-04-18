@@ -31,14 +31,14 @@ export function Chat() {
   const [editable, setEditable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<string[]>([]);
-  const [firstResponse, setFirstResponse] = useState<string | undefined>();
+  const [firstPrompt, setFirstResponse] = useState<string | undefined>();
 
   const [modalVisible, setModalVisible] = useState(false);
   const handleOpenModal = () => { setModalVisible(prev => !prev); };
 
-  const newChat: ChatStorageDTO[] = firstResponse ? [
+  const newChat: ChatStorageDTO[] = firstPrompt ? [
     {
-      title: firstResponse,
+      title: firstPrompt,
       chatid: firstUuid,
       data: response
     }
@@ -48,24 +48,22 @@ export function Chat() {
     const prompt = description.trim();
     const id = uuid.v4();
 
-    if (!firstResponse) {
+    if (!firstPrompt) {
       setUuid(id.toString())
       setFirstResponse(prompt);
     }
 
     try {
-      if (prompt.trim().length === 0) {
+      if (prompt.trim().length === 0 || !prompt) {
         Alert.alert('ChatGPT', 'Digite uma pergunta');
+      } else {
+        setResponse(prevResponses => [...prevResponses, prompt]);
+        setResponse(prevResponses => [...prevResponses, prompt.trim()]);
+        console.log('pro', prompt);
       }
-
-      setResponse(prevResponses => [...prevResponses, prompt]);
-      setResponse(prevResponses => [...prevResponses, prompt.trim()]);
-
-      await chatCreate(newChat[0], firstUuid)
     } catch (error) {
       console.log(error);
     }
-
     setDescription('');
 
     // setEditable(false);
@@ -100,6 +98,18 @@ export function Chat() {
     // setEditable(true);
   }
 
+  async function saveData() {
+    if (response.length) {
+
+      // console.log('RES', response);
+      console.log('chat', response);
+      console.log('id', firstUuid);
+      await chatCreate(newChat[0], firstUuid)
+
+    }
+
+  }
+
   async function fechtData() {
     try {
 
@@ -114,10 +124,10 @@ export function Chat() {
       console.log('get error', error);
     }
   }
-  useEffect(() => {
 
-    fechtData();
-  }, []);
+  useEffect(() => {
+    saveData()
+  }, [response]);
   // console.log('Chat', newChat);
 
   return (
@@ -125,7 +135,7 @@ export function Chat() {
       <Modal
         visible={modalVisible}
         onClose={handleOpenModal}
-        item={newChat[0]} />
+      />
       <Header
         onPress={handleOpenModal}
       />
@@ -133,27 +143,13 @@ export function Chat() {
 
       {/* loading */}
       <ChatText data={response} />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-
-        <TouchableOpacity
-          onPress={fechtData}
-        >
-          <Text>GET</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={fechtData}
-        >
-          <Text>Set</Text>
-        </TouchableOpacity>
-      </View>
-
 
       <View style={styles.content} >
         <SendArea
           placeholder='Digite sua pergunta'
           value={description}
           onChangeText={setDescription}
-          // onClear={handlefetchDataOpenAi}
+          onClear={handlefetchDataOpenAi}
           editable={editable}
         />
       </View>

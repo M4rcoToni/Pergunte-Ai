@@ -1,15 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MESSAGE_COLLECTION } from '../storageConfig';
+import { ChatProps } from '../../components/Modal/ChatsArea';
 export async function messageGetAll() {
   try {
     const storage = await AsyncStorage.getItem(MESSAGE_COLLECTION);
 
-    const message = storage ? JSON.parse(storage) : [];
-    console.log('MG', storage);
+    const messages: ChatProps[] = storage ? JSON.parse(storage) : [];
+    console.log('MGA', messages);
 
-    return message;
+    return messages;
 
   } catch (error) {
-    throw 'MG' + error;
+    throw 'MG Error' + error;
   }
 }

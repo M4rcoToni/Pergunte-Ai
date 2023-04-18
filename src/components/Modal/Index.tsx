@@ -13,41 +13,15 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 import { chatGetAll } from '../../storage/chat/chatGetAll';
 import { messageCreate } from '../../storage/message/messageCreate';
+import { messageGetAll } from '../../storage/message/messageGetAll';
 
 type Props = ModalProps & {
-  item: ChatProps;
   onClose?: () => void;
 }
 
-export function Modal({ item, onClose, ...rest }: Props) {
+export function Modal({ onClose, ...rest }: Props) {
   const navigation = useNavigation();
-  const [message, setMessage] = useState<ChatProps[]>([]);
 
-  async function handelCreateItem() {
-    const id = uuid.v4();
-    if (item) {
-      setMessage(prev => [...prev, item])
-    }
-    setMessage(prev => [...prev, {
-      title: 'Novo Chat',
-      chatid: id.toString(),
-    }])
-    navigation.navigate('Chat', { chatid: id.toString() })
-    addFirstItem()
-    console.log('Modal', message);
-
-  }
-  // navigation.navigate('Chat', { chatid: id.toString() })
-
-
-  async function addFirstItem() {
-    try {
-      await messageCreate(message);
-    } catch (error) {
-      console.log('Modal', error);
-    }
-
-  }
 
 
   return (
@@ -76,9 +50,7 @@ export function Modal({ item, onClose, ...rest }: Props) {
             />
           </View>
 
-          <Button
-            onPress={handelCreateItem}
-          />
+
 
           <ChatsArea />
 

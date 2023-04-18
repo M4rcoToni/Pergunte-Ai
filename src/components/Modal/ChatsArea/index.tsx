@@ -5,6 +5,11 @@ import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { messageGetAll } from '../../../storage/message/messageGetAll';
+import { Button } from '../Button';
+import { messageCreate } from '../../../storage/message/messageCreate';
+import uuid from 'react-native-uuid';
+import { Message } from '../../Message';
+import { messageRemoveChat } from '../../../storage/message/messageRemoveChat';
 
 export interface ChatProps {
   title: string;
@@ -22,43 +27,63 @@ export function ChatsArea() {
   async function fetchMessagesData() {
     try {
       const data = await messageGetAll();
-      const response = data[0];
-      console.log('CHAT AREA', response);
-      setMessage(response);
+      console.log('CHAT AREA', data);
+      setMessage(data)
     } catch (error) {
       console.log('CHAT AREA', error);
     }
   }
+  async function handleCreateItem() {
+    const id = uuid.v4();
 
+    const newMessage: ChatProps = {
+      title: 'Novo Chat',
+      chatid: id.toString(),
+    }
+    addFirstItem(newMessage)
+  }
+
+  async function addFirstItem(message: ChatProps) {
+    try {
+      await messageCreate(message);
+      setMessage(prev => [...prev, message])
+    } catch (error) {
+      console.log('Modal', error);
+    }
+  }
+  async function handleRemoveChat(chatid: string) {
+    try {
+      await messageRemoveChat(chatid);
+      setMessage(prev => prev.filter(item => item.chatid !== chatid))
+    } catch (error) {
+
+    }
+  }
   useEffect(() => {
     fetchMessagesData()
   }, []);
 
   return (
     <>
-      {
-        message !== undefined &&
-        <FlatList style={styles.container}
-          data={message}
-          keyExtractor={item => item.chatid}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.chat}
-              activeOpacity={0.7}
-              onPress={() => navigation.navigate('Chat', { chatid: item.chatid })}
-            >
-              <Feather name={"message-square"} size={20} color="#737380" />
-              <Text style={styles.text}>{item.title}</Text>
-            </TouchableOpacity>
-          )}
-          ListEmptyComponent={() => {
-            return (
-              <Text >Nenhum chat encontrado</Text>
-            )
-          }}
-        />
-
-      }
+      <Button
+        onPress={handleCreateItem}
+      />
+      <FlatList style={styles.container}
+        data={message}
+        keyExtractor={item => item.chatid}
+        renderItem={({ item }) =>
+          <Message
+            title={item.title}
+            chatid={item.chatid}
+            onPress={() => handleRemoveChat(item.chatid)}
+          />
+        }
+        ListEmptyComponent={() => {
+          return (
+            <Text style={styles.text}>Crie seu primeiro chat</Text>
+          )
+        }}
+      />
     </>
   );
 }
