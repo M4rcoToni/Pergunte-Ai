@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Text, Pressable } from 'react-native';
 import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { MotiView } from 'moti';
 
 type Props = {
   title: string,
@@ -15,7 +16,19 @@ export function Message({ chatid, title, onPress }: Props) {
   const ed = () => setEditable(prev => !prev)
 
   return (
-    <View style={styles.container}>
+    <MotiView
+      style={styles.container}
+      from={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      exit={{ opacity: 0 }}
+      transition={{
+        delay: 100,
+      }}
+    >
       <Pressable
         onLongPress={ed}
         style={styles.chat}
@@ -33,6 +46,6 @@ export function Message({ chatid, title, onPress }: Props) {
           <Feather name={"trash-2"} size={20} color="#737380" />
         </TouchableOpacity>
       }
-    </View>
+    </MotiView>
   );
 }

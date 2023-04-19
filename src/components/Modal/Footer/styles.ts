@@ -5,11 +5,12 @@ export const styles = StyleSheet.create({
   container: {
     borderTopWidth: 0.2,
     borderTopColor: THEME.COLORS.GRAY_200,
+    paddingTop: 6
   },
   area: {
     flexDirection: 'row',
     paddingHorizontal: 8,
-    paddingVertical: 12,
+    paddingVertical: 8,
     alignItems: 'center',
   },
   text: {

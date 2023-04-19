@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { messageGetAll } from './messageGetAll';
-import { CHAT_COLLECTION } from '../storageConfig';
+import { CHAT_COLLECTION, MESSAGE_COLLECTION } from '../storageConfig';
 
 
 export async function messageRemoveChat(chatId: string) {
@@ -8,7 +8,7 @@ export async function messageRemoveChat(chatId: string) {
     const storageMessages = await messageGetAll();
     const storageMessagesFiltered = storageMessages.filter((message) => message.chatid !== chatId);
 
-    await AsyncStorage.setItem('messages', JSON.stringify(storageMessagesFiltered));
+    await AsyncStorage.setItem(MESSAGE_COLLECTION, JSON.stringify(storageMessagesFiltered));
 
     await AsyncStorage.removeItem(`${CHAT_COLLECTION}-${chatId}`);
 

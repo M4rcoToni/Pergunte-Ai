@@ -37,7 +37,6 @@ export function Modal({ onClose, ...rest }: Props) {
         animate={{
           opacity: 1,
         }}
-
       >
         <View style={styles.content}>
           <View style={styles.header}>

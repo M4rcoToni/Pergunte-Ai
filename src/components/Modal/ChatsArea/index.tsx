@@ -10,6 +10,7 @@ import { messageCreate } from '../../../storage/message/messageCreate';
 import uuid from 'react-native-uuid';
 import { Message } from '../../Message';
 import { messageRemoveChat } from '../../../storage/message/messageRemoveChat';
+import { MotiText } from 'moti';
 
 export interface ChatProps {
   title: string;
@@ -33,6 +34,7 @@ export function ChatsArea() {
       console.log('CHAT AREA', error);
     }
   }
+
   async function handleCreateItem() {
     const id = uuid.v4();
 
@@ -51,6 +53,7 @@ export function ChatsArea() {
       console.log('Modal', error);
     }
   }
+
   async function handleRemoveChat(chatid: string) {
     try {
       await messageRemoveChat(chatid);
@@ -80,7 +83,20 @@ export function ChatsArea() {
         }
         ListEmptyComponent={() => {
           return (
-            <Text style={styles.text}>Crie seu primeiro chat</Text>
+            <MotiText
+              style={styles.text}
+              from={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+              transition={{
+                delay: 100,
+              }}
+            >
+              Crie seu primeiro chat
+            </MotiText>
           )
         }}
       />
