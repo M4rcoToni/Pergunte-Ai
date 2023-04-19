@@ -1,18 +1,16 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, View, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Alert } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
+
 import { ChatText } from '../../components/ChatText';
 import { Header } from '../../components/Header';
 import { SendArea } from '../../components/SendArea';
-
-import { styles } from './styles';
 import { Modal } from '../../components/Modal/Index';
-import { ChatProps } from '../../components/Modal/ChatsArea/index';
-import uuid from 'react-native-uuid';
 import { chatCreate } from '../../storage/chat/chatCreate';
 import { ChatStorageDTO } from '../../storage/chat/ChatStorageDTO';
 import { chatGetAll } from '../../storage/chat/chatGetAll';
-import { messageCreate } from '../../storage/message/messageCreate';
+import { styles } from './styles';
 
 type RouteParams = {
   chatid: string;
@@ -27,7 +25,6 @@ export function Chat() {
   const [description, setDescription] = useState('');
   const [firstUuid, setUuid] = useState('');
   const [editable, setEditable] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<string[]>([]);
   const [firstPrompt, setFirstResponse] = useState<string | undefined>();
 
@@ -114,9 +111,9 @@ export function Chat() {
       const chat = await chatGetAll(param.chatid)
       await chatCreate(
         {
-          chatid: param.chatid
-          , title: chat.title
-          , data: response
+          chatid: param.chatid,
+          title: chat.title,
+          data: response
         }
         , param.chatid)
 
@@ -126,9 +123,9 @@ export function Chat() {
       const chat = await chatGetAll(param.chatid)
       await chatCreate(
         {
-          chatid: param.chatid
-          , title: chat.title
-          , data: response
+          chatid: param.chatid,
+          title: chat.title,
+          data: response
         }
         , param.chatid)
     }
