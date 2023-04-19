@@ -13,7 +13,12 @@ type Props = {
 export function Message({ chatid, title, onPress }: Props) {
   const navigation = useNavigation();
   const [editable, setEditable] = useState(false);
-  const ed = () => setEditable(prev => !prev)
+
+  const handleShowOptions = () => setEditable(prev => !prev)
+
+  function handleChangeChat() {
+    navigation.navigate('Chat', { chatid: chatid })
+  }
 
   return (
     <MotiView
@@ -29,21 +34,22 @@ export function Message({ chatid, title, onPress }: Props) {
         delay: 100,
       }}
     >
-      <Pressable
-        onLongPress={ed}
+      <TouchableOpacity
         style={styles.chat}
-        onPress={() => navigation.navigate('Chat', { chatid: chatid })}
+        onLongPress={handleShowOptions}
+        onPress={handleChangeChat}
+        activeOpacity={0.5}
       >
-        <Feather name={"message-square"} size={20} color="#737380" />
+        <Feather name={"message-square"} size={20} color="#D5D4D9" />
         <Text style={styles.text}>{title}</Text>
-      </Pressable>
+      </TouchableOpacity>
       {
         editable &&
         <TouchableOpacity
           style={styles.trash}
           onPress={onPress}
         >
-          <Feather name={"trash-2"} size={20} color="#737380" />
+          <Feather name={"trash-2"} size={20} color="#D5D4D9" />
         </TouchableOpacity>
       }
     </MotiView>

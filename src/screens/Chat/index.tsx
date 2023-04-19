@@ -23,8 +23,6 @@ const CHAT_GPD_API_KEY = process.env.CHAT_GPD_API_KEY;
 export function Chat() {
   const route = useRoute();
   const param = route.params as RouteParams;
-  if (param)
-    console.log("id", param.chatid);
 
   const [description, setDescription] = useState('');
   const [firstUuid, setUuid] = useState('');
@@ -33,8 +31,12 @@ export function Chat() {
   const [response, setResponse] = useState<string[]>([]);
   const [firstPrompt, setFirstResponse] = useState<string | undefined>();
 
+  const [lastParam, setLastParam] = useState('');
+
   const [modalVisible, setModalVisible] = useState(false);
   const handleOpenModal = () => { setModalVisible(prev => !prev); };
+
+
 
   const newChat: ChatStorageDTO[] = firstPrompt ? [
     {
@@ -99,26 +101,49 @@ export function Chat() {
   }
 
   async function saveData() {
-    if (response.length) {
+    console.log('res', response);
 
-      // console.log('RES', response);
-      console.log('chat', response);
-      console.log('id', firstUuid);
+    if (response.length && !param) {
+      console.log('if1', firstUuid);
+
       await chatCreate(newChat[0], firstUuid)
+    }
+    if (!firstUuid && param) {
+      console.log('dif id');
+      console.log('if2', param.chatid);
+      const chat = await chatGetAll(param.chatid)
+      await chatCreate(
+        {
+          chatid: param.chatid
+          , title: chat.title
+          , data: response
+        }
+        , param.chatid)
 
     }
+    if (param && response) {
+      console.log('if3');
+      const chat = await chatGetAll(param.chatid)
+      await chatCreate(
+        {
+          chatid: param.chatid
+          , title: chat.title
+          , data: response
+        }
+        , param.chatid)
+    }
+
+    console.log('not save');
 
   }
 
-  async function fechtData() {
+  async function fechtData(id: string) {
     try {
 
-      const chatData = await chatGetAll(param.chatid ? param.chatid : firstUuid);
-
+      const chatData = await chatGetAll(id);
       const response = chatData.data;
       console.log('GET IN CHAT', response)
       setResponse(response)
-
 
     } catch (error) {
       console.log('get error', error);
@@ -126,9 +151,18 @@ export function Chat() {
   }
 
   useEffect(() => {
+    if (param) {
+      if (lastParam !== null && param.chatid !== lastParam) {
+
+        fechtData(param.chatid)
+      }
+      setLastParam(param.chatid);
+    }
+  }, [param, lastParam]);
+
+  useEffect(() => {
     saveData()
   }, [response]);
-  // console.log('Chat', newChat);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -139,7 +173,6 @@ export function Chat() {
       <Header
         onPress={handleOpenModal}
       />
-
 
       {/* loading */}
       <ChatText data={response} />

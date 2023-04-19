@@ -11,8 +11,7 @@ export async function chatCreate(newChat: ChatStorageDTO, id: string) {
     // const storageChat = await chatGetAll(id);
 
     const storage = JSON.stringify(newChat);
-    // await AsyncStorage.setItem(`${CHAT_COLLECTION}-${id}`, storage);
-    // console.log('Storage', storage);
+    await AsyncStorage.setItem(`${CHAT_COLLECTION}-${id}`, storage);
     const messages = await messageGetAll()
 
     const already = messages.filter(message => message.chatid === newChat.chatid)

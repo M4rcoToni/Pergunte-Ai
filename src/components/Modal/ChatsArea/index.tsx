@@ -11,6 +11,7 @@ import uuid from 'react-native-uuid';
 import { Message } from '../../Message';
 import { messageRemoveChat } from '../../../storage/message/messageRemoveChat';
 import { MotiText } from 'moti';
+import { chatCreate } from '../../../storage/chat/chatCreate';
 
 export interface ChatProps {
   title: string;
@@ -31,7 +32,7 @@ export function ChatsArea() {
       console.log('CHAT AREA', data);
       setMessage(data)
     } catch (error) {
-      console.log('CHAT AREA', error);
+      console.log('CHAT AREA ERROR', error);
     }
   }
 
@@ -48,6 +49,13 @@ export function ChatsArea() {
   async function addFirstItem(message: ChatProps) {
     try {
       await messageCreate(message);
+
+      await chatCreate({
+        chatid: message.chatid,
+        title: message.title,
+        data: []
+      }, message.chatid)
+
       setMessage(prev => [...prev, message])
     } catch (error) {
       console.log('Modal', error);

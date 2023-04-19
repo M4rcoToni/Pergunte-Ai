@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, View, Text } from 'react-native';
 
 import { styles } from './styles';
+import { MotiText } from 'moti';
 interface Props {
   data: string[];
 }
@@ -9,7 +10,8 @@ interface Props {
 export function ChatText({ data }: Props) {
   return (
     <View style={styles.container}>
-      {data &&
+      {
+        data &&
         <FlatList
           style={styles.scroll}
           data={data}
@@ -27,9 +29,11 @@ export function ChatText({ data }: Props) {
           )}
           ListEmptyComponent={() => (
 
-            <Text style={styles.empty}>
+            <MotiText
+              style={styles.empty}
+            >
               Olá, eu sou o GPT,{"\n"} como posso te ajudar?
-            </Text>
+            </MotiText>
           )}
         />
       }

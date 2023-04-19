@@ -4,7 +4,9 @@ import { ChatStorageDTO } from './ChatStorageDTO';
 export async function chatGetAll(id: string) {
   try {
     const storage = await AsyncStorage.getItem(`${CHAT_COLLECTION}-${id}`);
-
+    if (!storage) {
+      console.log("get null", storage);
+    }
     const chat: ChatStorageDTO = storage ? JSON.parse(storage) : [];
     console.log("get", chat);
 

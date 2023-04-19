@@ -15,7 +15,7 @@ export function Button({ ...rest }: Props) {
       <Feather
         name="plus"
         size={18}
-        color="#737380"
+        color="#D5D4D9"
       />
       <Text style={styles.text}>
         Novo Chat

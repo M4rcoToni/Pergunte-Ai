@@ -22,8 +22,6 @@ type Props = ModalProps & {
 export function Modal({ onClose, ...rest }: Props) {
   const navigation = useNavigation();
 
-
-
   return (
     <ReactNativeModal
       {...rest}
@@ -40,7 +38,6 @@ export function Modal({ onClose, ...rest }: Props) {
       >
         <View style={styles.content}>
           <View style={styles.header}>
-
             <Feather
               name="x"
               size={30}
@@ -49,15 +46,12 @@ export function Modal({ onClose, ...rest }: Props) {
             />
           </View>
 
-
-
           <ChatsArea />
 
           <Footer />
 
         </View>
       </MotiView>
-
     </ReactNativeModal>
   );
 }
