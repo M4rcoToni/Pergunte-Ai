@@ -1,2 +1,2 @@
 # ChatGPT-Mobile
-![App](github/assets/home.png) ![App](github/assets/modal.png)
+<img src="github/assets/home.png" height="550" widt="550"/> <img src="github/assets/modal.png" height="550" widt="550"/>
