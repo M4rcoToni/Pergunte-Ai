@@ -4,6 +4,7 @@ import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { MotiView } from 'moti';
+import TypeWriter from 'react-native-typewriter';
 
 type Props = {
   title: string,
@@ -41,7 +42,7 @@ export function Message({ chatid, title, onPress }: Props) {
         activeOpacity={0.5}
       >
         <Feather name={"message-square"} size={20} color="#D5D4D9" />
-        <Text style={styles.text}>{title}</Text>
+        <TypeWriter typing={1} style={styles.text}>{title}</TypeWriter>
       </TouchableOpacity>
       {
         editable &&

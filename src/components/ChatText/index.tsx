@@ -3,6 +3,7 @@ import { FlatList, View, Text } from 'react-native';
 
 import { styles } from './styles';
 import { MotiText } from 'moti';
+import TypeWriter from 'react-native-typewriter';
 interface Props {
   data: string[];
 }
@@ -17,15 +18,31 @@ export function ChatText({ data }: Props) {
           data={data}
           contentContainerStyle={data.length == 0 ? styles.containerEmpty : null}
           renderItem={({ item, index }) => (
-            <Text
-              key={item}
-              style={[
-                styles.responsee,
-                index % 2 !== 1 ? styles.description : null,
-              ]}
-            >
-              {item}
-            </Text>
+            <>
+              {
+                index % 2 !== 1 ?
+                  <Text
+                    key={item}
+                    style={[
+                      styles.responsee,
+                      index % 2 !== 1 ? styles.description : null,
+                    ]}
+                  >
+                    {item}
+                  </Text>
+                  :
+                  <TypeWriter
+                    key={item}
+                    typing={1}
+                    style={[
+                      styles.responsee,
+                      index % 2 !== 1 ? styles.description : null,
+                    ]}
+                  >
+                    {item}
+                  </TypeWriter >
+              }
+            </>
           )}
           ListEmptyComponent={() => (
 

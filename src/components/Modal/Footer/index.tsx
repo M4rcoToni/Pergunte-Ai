@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, TouchableOpacity, Linking } from 'react-native';
 
 import { styles } from './styles';
 import { Feather } from '@expo/vector-icons';
@@ -10,8 +10,18 @@ interface Botton {
   icon: string;
   onPressed?: () => void;
 }
+const url = 'https://github.com/M4rcoToni/ChatGPT-Mobile';
 
 export function Footer() {
+
+
+  const press = useCallback(async () => {
+    const supported = await Linking.canOpenURL(url)
+    if (supported) {
+      await Linking.openURL(url);
+    }
+  }, [])
+
   const data: Botton[] = [
     {
       id: 1,
@@ -29,7 +39,7 @@ export function Footer() {
       id: 3,
       text: 'Github',
       icon: "github",
-
+      onPressed: press
     },
   ];
   return (

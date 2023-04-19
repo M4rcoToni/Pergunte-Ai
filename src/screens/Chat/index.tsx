@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
+import TypeWriter from 'react-native-typewriter'
 
 import { ChatText } from '../../components/ChatText';
 import { Header } from '../../components/Header';
@@ -32,8 +33,6 @@ export function Chat() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const handleOpenModal = () => { setModalVisible(prev => !prev); };
-
-
 
   const newChat: ChatStorageDTO[] = firstPrompt ? [
     {
@@ -173,7 +172,6 @@ export function Chat() {
 
       {/* loading */}
       <ChatText data={response} />
-
       <View style={styles.content} >
         <SendArea
           placeholder='Digite sua pergunta'
