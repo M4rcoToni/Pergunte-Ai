@@ -3,15 +3,14 @@ import { SafeAreaView, View, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 import TypeWriter from 'react-native-typewriter'
+import { ChatStorageDTO } from '../storage/chat/ChatStorageDTO';
+import { chatCreate } from '../storage/chat/chatCreate';
+import { chatGetAll } from '../storage/chat/chatGetAll';
+import { Header } from '../components/Header';
+import { SendArea } from '../components/SendArea';
+import { ChatText } from '../components/ChatText';
+import { Modal } from '../components/Modal/Index';
 
-import { ChatText } from '../../components/ChatText';
-import { Header } from '../../components/Header';
-import { SendArea } from '../../components/SendArea';
-import { Modal } from '../../components/Modal/Index';
-import { chatCreate } from '../../storage/chat/chatCreate';
-import { ChatStorageDTO } from '../../storage/chat/ChatStorageDTO';
-import { chatGetAll } from '../../storage/chat/chatGetAll';
-import { styles } from './styles';
 
 type RouteParams = {
   chatid: string;
@@ -160,7 +159,7 @@ export function Chat() {
   }, [response]);
 
   return (
-    <SafeAreaView className='flex-1 pt-3 bg-gray-700 justify-end'>
+    <SafeAreaView className='flex-1 pt-3 bg-zinc-800 justify-end'>
       <Modal
         visible={modalVisible}
         onClose={handleOpenModal}
@@ -171,7 +170,7 @@ export function Chat() {
 
       {/* loading */}
       <ChatText data={response} />
-      <View style={styles.content} >
+      <View className='p-3 bg-transparent' >
         <SendArea
           placeholder='Digite sua pergunta'
           value={description}

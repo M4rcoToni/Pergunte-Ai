@@ -1,15 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import { useFonts, NotoSans_400Regular, NotoSans_700Bold, NotoSans_800ExtraBold } from "@expo-google-fonts/noto-sans";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_800ExtraBold
+} from '@expo-google-fonts/inter';
+
 import { Loading } from './src/components/Loading';
-import { Chat } from './src/screens/Chat';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Routes } from './src/routes/index';
+
 export default function App() {
   const [fontsLoaded] = useFonts({
-    NotoSans_400Regular,
-    NotoSans_700Bold,
-    NotoSans_800ExtraBold
+    Inter_400Regular,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold
   });
 
   if (!fontsLoaded) {
