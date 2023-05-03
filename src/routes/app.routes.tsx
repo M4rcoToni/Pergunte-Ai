@@ -6,7 +6,7 @@ import { Home } from '../screens/Home';
 const { Navigator, Screen } = createNativeStackNavigator();
 export function AppRoutes() {
   return (
-    <Navigator screenOptions={{ headerShown: false, animation: 'slide_from_bottom' }}>
+    <Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
 
       <Screen
         name='Home'
@@ -16,7 +16,6 @@ export function AppRoutes() {
         name='Chat'
         component={Chat}
       />
-
 
     </Navigator>
   );

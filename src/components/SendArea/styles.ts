@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 7,
     borderColor: THEME.COLORS.PRIMARY,
-    fontFamily: THEME.FONTS.FAMILY.PRIMARY.REGULAR,
     fontSize: THEME.FONTS.SIZE.MD,
     color: THEME.COLORS.GRAY_200,
   },

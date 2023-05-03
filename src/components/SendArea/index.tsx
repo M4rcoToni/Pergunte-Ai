@@ -10,10 +10,10 @@ import { MotiView, } from 'moti';
 import { BounceIn } from 'react-native-reanimated';
 
 type Props = TextInputProps & {
-  onClear?: () => void;
+  onPress?: () => void;
 }
 
-export function SendArea({ value, editable, onClear, ...rest }: Props) {
+export function SendArea({ value, editable, onPress: onClear, ...rest }: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
   return (

@@ -176,7 +176,7 @@ export function Chat() {
           placeholder='Digite sua pergunta'
           value={description}
           onChangeText={setDescription}
-          onClear={handlefetchDataOpenAi}
+          onPress={handlefetchDataOpenAi}
           editable={editable}
         />
       </View>

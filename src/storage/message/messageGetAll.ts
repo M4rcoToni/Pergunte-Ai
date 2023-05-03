@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MESSAGE_COLLECTION } from '../storageConfig';
-import { ChatProps } from '../../components/Modal/ChatsArea';
+import { ChatProps } from '../../screens/Home';
+
 export async function messageGetAll() {
   try {
     const storage = await AsyncStorage.getItem(MESSAGE_COLLECTION);
