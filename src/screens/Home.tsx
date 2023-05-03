@@ -1,15 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Card } from '../components/Card';
+import { MotiView } from 'moti';
+import colors from 'tailwindcss/colors';
 import { Feather } from '@expo/vector-icons';
 
-import { messageGetAll } from '../storage/message/messageGetAll';
-
 import uuid from 'react-native-uuid';
+import { messageGetAll } from '../storage/message/messageGetAll';
 import { messageCreate } from '../storage/message/messageCreate';
 import { chatCreate } from '../storage/chat/chatCreate';
 import { messageRemoveChat } from '../storage/message/messageRemoveChat';
+
+import { Card } from '../components/Card';
 import { ListEmpty } from '../components/ListEmpty';
+import { Header } from '../components/Header';
+import { Icon } from '../components/Icon';
+import { useFocusEffect } from '@react-navigation/native';
+import { Loading } from '../components/Loading';
+import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
 
 export type ChatProps = {
   title: string;
@@ -20,16 +27,21 @@ export type ChatProps = {
 export function Home() {
   const [message, setMessage] = useState<ChatProps[]>([]);
   const [visible, setVisible] = useState(true);
+  const [removeId, setRemoveId] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const date = new Date;
   const time = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
 
   async function fetchMessagesData() {
     try {
+      setIsLoading(false);
       const data = await messageGetAll();
-      console.log('CHAT AREA', data);
+      // console.log('CHAT AREA', data);
       setMessage(data)
     } catch (error) {
       console.log('CHAT AREA ERROR', error);
+    } finally {
+      setIsLoading(true);
     }
   }
 
@@ -66,63 +78,86 @@ export function Home() {
   async function handleRemoveChat(chatid: string) {
     try {
       setVisible(false);
+      setRemoveId(chatid);
       console.log('remove');
 
       await messageRemoveChat(chatid);
+      setVisible(true);
+
       setMessage(prev => prev.filter(item => item.chatid !== chatid))
     } catch (error) {
       console.log('ErrorRemove', error);
+    } finally {
     }
   }
+  console.log(visible);
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     fetchMessagesData()
-  }, []);
+  }, []));
 
   return (
     <SafeAreaView className='flex-1 bg-gray-back pt-10 px-6'>
-      <View className='pb-6'>
-        <TouchableOpacity className='h-12 w-12 rounded-full bg-gray-500 justify-center items-center '>
-          <Feather
-            name='grid'
-            size={20}
-            color='white'
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View>
-        <FlatList
-          data={message}
-          keyExtractor={(item) => item.chatid}
-          contentContainerStyle={{ paddingBottom: 130 }}
-          renderItem={({ item, index }) =>
-            <Card
-              chatid={item.chatid}
-              title={item.title}
-              createdAt={item.createdAt}
-              isActive={index == 0 && true}
-
-              removeChat={() => handleRemoveChat(item.chatid)}
+      <Header />
+      {
+        isLoading ?
+          <View>
+            <FlatList
+              data={message}
+              keyExtractor={(item) => item.chatid}
+              contentContainerStyle={{ paddingBottom: 130 }}
+              renderItem={({ item, index }) => (
+                <Animated.View
+                  layout={Layout}
+                >
+                  <Card
+                    chatid={item.chatid}
+                    title={item.title}
+                    createdAt={item.createdAt}
+                    isActive={index == 0 && true}
+                    visible={removeId === item.chatid}
+                    removeChat={() => handleRemoveChat(item.chatid)}
+                  />
+                </Animated.View>
+              )
+              }
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => (
+                <ListEmpty />
+              )}
             />
-          }
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => (
-            <ListEmpty />
-          )}
-        />
-      </View>
-      <TouchableOpacity
-        className='h-16 w-16 bg-purple-mid justify-center items-center rounded-full absolute bottom-0 right-0 mb-8 mr-5'
-        activeOpacity={0.9}
-        onPress={handleCreateItem}
+          </View>
+          :
+          <Loading />
+      }
+      <MotiView
+        className=' absolute bottom-0 right-0 mb-8 mr-5'
+        from={{
+          opacity: 0,
+          scale: 0,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+        }}
+        transition={{
+          type: 'timing',
+          duration: 400,
+        }}
       >
-        <Feather
-          name='plus'
-          size={24}
-          color='white'
-        />
-      </TouchableOpacity>
+        <Icon
+          className='h-16 w-16'
+          background='bg-purple-mid'
+          activeOpacity={0.9}
+          onPress={handleCreateItem}
+        >
+          <Feather
+            name='plus'
+            size={24}
+            color={colors.zinc[300]}
+          />
+        </Icon>
+      </MotiView>
     </SafeAreaView>
   )
 }

@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import tw from 'twrnc';
 
 import colors from 'tailwindcss/colors';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { AnimatePresence, MotiView } from 'moti';
+import { AnimatePresence, MotiView, } from 'moti';
+import { useAnimatedStyle, Layout } from 'react-native-reanimated';
 
 type Props = {
   chatid: string;
@@ -19,16 +19,28 @@ type Props = {
 
 export function Card({ visible = true, isActive, createdAt, title, chatid, removeChat }: Props) {
   const navigation = useNavigation();
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: visible ? 1 : 0,
+      transform: [
+        {
+          translateY: visible ? 0 : -50,
+        },
+      ],
+    };
+  });
   return (
     <AnimatePresence>
       {
-        visible && (
+        !visible && (
           <MotiView
+            style={animatedStyle}
             className='h-40 w-full rounded-2xl bg-gray-500 mb-4 shadow-md  shadow-black'
             from={{
               opacity: 0,
               translateY: -50
             }}
+            layout={Layout}
             animate={{
               opacity: 1,
               translateY: 0

@@ -10,8 +10,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'white': {
-          100: '#ffffff75'
+        'trans': {
+          100: '#ffffff25'
         },
         'gray': {
           500: '#2d2835', // card

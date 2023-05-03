@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.9.12",
     "dotenv": "^16.0.3",
     "expo": "~48.0.6",
+    "expo-linear-gradient": "~12.1.2",
     "expo-status-bar": "~1.4.4",
     "expo-updates": "~0.16.4",
     "moti": "^0.24.2",
@@ -27,8 +28,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-typewriter": "^0.7.0",
     "react-native-uuid": "^2.0.1",
-    "twrnc": "^3.6.0",
-    "expo-linear-gradient": "~12.1.2"
+    "twrnc": "^3.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",

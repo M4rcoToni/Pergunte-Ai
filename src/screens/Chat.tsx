@@ -1,18 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, View, Alert, FlatList, Text, TouchableOpacity } from 'react-native';
+import { MotiText } from 'moti';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
-import TypeWriter from 'react-native-typewriter'
-import { ChatStorageDTO } from '../storage/chat/ChatStorageDTO';
-import { chatCreate } from '../storage/chat/chatCreate';
-import { chatGetAll } from '../storage/chat/chatGetAll';
-import { Header } from '../components/Header';
-import { SendArea } from '../components/SendArea';
-import { ChatText } from '../components/ChatText';
-import { Modal } from '../components/Modal/Index';
-import { MotiText } from 'moti';
+import TypeWriter from 'react-native-typewriter';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+
+import { chatGetAll } from '../storage/chat/chatGetAll';
+
+import { SendArea } from '../components/SendArea';
+import { Icon } from '../components/Icon';
 
 
 type RouteParams = {
@@ -108,9 +106,10 @@ export function Chat() {
         end={[1, 0]}
         className=' flex-1 '
       >
-        <View className='h-32 justify-center'>
-          <TouchableOpacity
-            className='h-12 w-12 justify-center items-center rounded-full m-5 bg-white-100'
+        <View className='h-32 flex-row py-7 px-4'>
+          <Icon
+            className='h-12 w-12'
+            background='bg-trans-100'
             onPress={() => navigation.goBack()}
             activeOpacity={0.8}
           >
@@ -119,7 +118,7 @@ export function Chat() {
               size={24}
               color="white"
             />
-          </TouchableOpacity>
+          </Icon>
         </View>
         {
           response &&
@@ -166,7 +165,7 @@ export function Chat() {
                 className='text-3xl self-center text-white font-extrabold tracking-wider '
                 from={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ type: 'timing', duration: 2000 }}
+                transition={{ type: 'timing', duration: 800 }}
               >
                 Bem vindo {"\n"}como posso te ajudar?
               </MotiText>
