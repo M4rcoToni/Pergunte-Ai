@@ -1,23 +1,24 @@
-import { useEffect, useState, useCallback } from 'react';
-import { View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
-import { MotiView } from 'moti';
+import { useState, useCallback } from 'react';
+import { View, SafeAreaView } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { MotiView, } from 'moti';
+import dayjs from 'dayjs';
 import colors from 'tailwindcss/colors';
 import { Feather } from '@expo/vector-icons';
+import Animated, { Layout } from 'react-native-reanimated';
 
 import uuid from 'react-native-uuid';
 import { messageGetAll } from '../storage/message/messageGetAll';
 import { messageCreate } from '../storage/message/messageCreate';
 import { chatCreate } from '../storage/chat/chatCreate';
 import { messageRemoveChat } from '../storage/message/messageRemoveChat';
+import { messageChangeTitle } from '../storage/message/messageChangeTitle';
 
 import { Card } from '../components/Card';
 import { ListEmpty } from '../components/ListEmpty';
 import { Header } from '../components/Header';
 import { Icon } from '../components/Icon';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Loading } from '../components/Loading';
-import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
-import { messageChangeTitle } from '../storage/message/messageChangeTitle';
 
 export type ChatProps = {
   title: string;
@@ -29,10 +30,11 @@ export function Home() {
 
   const [message, setMessage] = useState<ChatProps[]>([]);
   const [visible, setVisible] = useState(true);
-  const [removeId, setRemoveId] = useState('');
+  const [selectedId, setSelectedId] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const date = new Date;
-  const time = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
+  const [editable, setEditable] = useState(false);
+
+  const time = dayjs().format('DD/MM/YYYY');
 
   async function fetchMessagesData() {
     try {
@@ -80,12 +82,14 @@ export function Home() {
   async function handleRemoveChat(chatid: string) {
     try {
       setVisible(false);
-      setRemoveId(chatid);
+      setSelectedId(chatid);
 
       await messageRemoveChat(chatid);
 
-      setMessage(prev => prev.filter(item => item.chatid !== chatid))
-      setVisible(true);
+      setTimeout(() => {
+        setMessage(prev => prev.filter(item => item.chatid !== chatid))
+        setVisible(true);
+      }, 700);
 
     } catch (error) {
       console.log('ErrorRemove', error);
@@ -93,13 +97,13 @@ export function Home() {
     }
   }
 
-  console.log(visible);
 
   async function handleChangeTitle(chatid: string, title: string) {
     try {
+      setEditable(true)
+      setSelectedId(chatid)
       await messageChangeTitle(chatid, title);
       const data = await messageGetAll();
-      // console.log('CHAT AREA', data);
       setMessage(data)
     } catch (error) {
       console.log(error);
@@ -115,28 +119,23 @@ export function Home() {
       <Header />
       {
         isLoading ?
-          <MotiView
-            className='flex-1'
-          >
+          <View className='flex-1'>
             <Animated.FlatList
               data={message}
               layout={Layout}
               keyExtractor={(item) => item.chatid}
               contentContainerStyle={[message.length === 0 && { flex: 1, justifyContent: 'center' }, { paddingBottom: 130 }]}
               renderItem={({ item, index }) => (
-                <Animated.View
-                  layout={Layout}
-                >
-                  <Card
-                    chatid={item.chatid}
-                    title={item.title}
-                    createdAt={item.createdAt}
-                    isActive={index == 0 && true}
-                    visible={true}
-                    changeTitle={() => handleChangeTitle(item.chatid, '')}
-                    removeChat={() => handleRemoveChat(item.chatid)}
-                  />
-                </Animated.View>
+                <Card
+                  chatid={item.chatid}
+                  title={item.title}
+                  createdAt={item.createdAt}
+                  isActive={index == 0 && true}
+                  visible={selectedId === item.chatid ? visible : true}
+                  editable={selectedId === item.chatid ? editable : false}
+                  changeTitle={() => handleChangeTitle(item.chatid, '')}
+                  removeChat={() => handleRemoveChat(item.chatid)}
+                />
               )
               }
               showsVerticalScrollIndicator={false}
@@ -144,9 +143,10 @@ export function Home() {
                 <ListEmpty />
               )}
             />
-          </MotiView>
+          </View>
           :
           <Loading />
+
       }
       <MotiView
         className=' absolute bottom-0 right-0 mb-8 mr-5'
@@ -160,7 +160,7 @@ export function Home() {
         }}
         transition={{
           type: 'timing',
-          duration: 400,
+          duration: 500,
         }}
       >
         <Icon

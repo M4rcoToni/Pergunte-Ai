@@ -1,12 +1,13 @@
 import { View } from 'react-native';
-import { Icon } from './Icon';
+import { MotiView } from 'moti';
 
 import { Feather } from '@expo/vector-icons';
+import { Icon } from './Icon';
 import colors from 'tailwindcss/colors';
 
 export function Header() {
   return (
-    <View className='flex-row  mb-5'>
+    <MotiView className='flex-row  mb-5'>
       <View className='flex-1'>
         <Icon>
           <Feather
@@ -32,6 +33,6 @@ export function Header() {
           color={colors.zinc[300]}
         />
       </Icon>
-    </View>
+    </MotiView>
   );
 }
