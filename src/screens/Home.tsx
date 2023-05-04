@@ -98,7 +98,9 @@ export function Home() {
   async function handleChangeTitle(chatid: string, title: string) {
     try {
       await messageChangeTitle(chatid, title);
-      fetchMessagesData();
+      const data = await messageGetAll();
+      // console.log('CHAT AREA', data);
+      setMessage(data)
     } catch (error) {
       console.log(error);
     }
