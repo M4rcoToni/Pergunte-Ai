@@ -19,8 +19,9 @@ module.exports = {
           back: '#262130' //background
         },
         'purple': {
-          mid: '#7732c4'
-        }
+          mid: '#7732c4',
+        },
+        'grad': 'linear-gradient(90deg, #9572FC 0%, #00d4ff 50.52%, #e700ff 100%)',
       },
       fontFamily: {
         regular: 'Inter_400Regular',

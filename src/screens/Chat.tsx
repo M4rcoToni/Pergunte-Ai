@@ -11,6 +11,8 @@ import { chatGetAll } from '../storage/chat/chatGetAll';
 
 import { SendArea } from '../components/SendArea';
 import { Icon } from '../components/Icon';
+import { chatCreate } from '../storage/chat/chatCreate';
+import { Input } from '../components/Input';
 
 
 type RouteParams = {
@@ -24,14 +26,15 @@ export function Chat() {
   const param = route.params as RouteParams;
   const navigation = useNavigation();
   const [description, setDescription] = useState('');
-  const [firstUuid, setUuid] = useState('');
   const [editable, setEditable] = useState(true);
   const [response, setResponse] = useState<string[]>([]);
+
+  const date = new Date;
+  const time = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
 
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
     const id = uuid.v4();
-
 
     try {
       if (prompt.trim().length === 0 || !prompt) {
@@ -78,9 +81,9 @@ export function Chat() {
     // setEditable(true);
   }
 
-  async function fechtData() {
+  async function fechtData(chatid: string) {
     try {
-      const chatData = await chatGetAll(firstUuid);
+      const chatData = await chatGetAll(param.chatid);
       const response = chatData.data;
       console.log('GET IN CHAT', response)
       if (response) {
@@ -92,11 +95,27 @@ export function Chat() {
     }
   }
 
+  async function saveData() {
+    const chat = await chatGetAll(param.chatid)
+    await chatCreate(
+      {
+        title: chat.title,
+        chatid: param.chatid,
+        data: response,
+        createdAt: time
+      }
+      , param.chatid)
+  }
+
   useEffect(() => {
     if (param != undefined) {
-      setUuid(param.chatid);
+      fechtData(param.chatid)
     }
   }, []);
+
+  useEffect(() => {
+    saveData()
+  }, [response]);
 
   return (
     <SafeAreaView className='flex-1'>
@@ -165,22 +184,16 @@ export function Chat() {
                 className='text-3xl self-center text-white font-extrabold tracking-wider '
                 from={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ type: 'timing', duration: 800 }}
+                transition={{ type: 'timing', duration: 1000 }}
               >
-                Bem vindo {"\n"}como posso te ajudar?
+                Bem vindo, {"\n"}como posso te ajudar?
               </MotiText>
             )}
           />
         }
-        <View className='absolute bottom-5 mb-3 mx-4 bg-gray-500'>
+        <View className='absolute bottom-5 mb-3 mx-4 '>
           {/* arrumar rerenders */}
-          <SendArea
-            placeholder='Digite sua pergunta'
-            onPress={handlefetchDataOpenAi}
-            value={description}
-            onChangeText={setDescription}
-            editable={editable}
-          />
+          <Input />
         </View>
       </LinearGradient>
     </SafeAreaView>

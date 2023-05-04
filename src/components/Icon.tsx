@@ -24,7 +24,11 @@ function IconStyled({ background = 'bg-gray-500', children, ...rest }: Props) {
       }}
 
     >
-      <TouchableOpacity className={`h-12 w-12 rounded-full bg-gray-500 justify-center items-center ${background}`} {...rest}>
+      <TouchableOpacity
+        className={`h-12 w-12 rounded-full bg-gray-500 justify-center items-center ${background}`}
+        {...rest}
+        activeOpacity={0.8}
+      >
         {children}
       </TouchableOpacity>
     </MotiView>

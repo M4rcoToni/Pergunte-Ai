@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import colors from 'tailwindcss/colors';
@@ -6,41 +6,33 @@ import colors from 'tailwindcss/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { AnimatePresence, MotiView, } from 'moti';
-import { useAnimatedStyle, Layout } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, Layout } from 'react-native-reanimated';
+import { useState } from 'react';
 
 type Props = {
   chatid: string;
   title: string;
   createdAt: string;
   isActive: boolean;
-  visible?: boolean;
+  visible: boolean;
+  editable?: boolean;
   removeChat: () => void;
+  changeTitle: () => void;
 }
 
-export function Card({ visible = true, isActive, createdAt, title, chatid, removeChat }: Props) {
+export function Card({ visible = true, changeTitle, editable, isActive, createdAt, title, chatid, removeChat }: Props) {
   const navigation = useNavigation();
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: visible ? 1 : 0,
-      transform: [
-        {
-          translateY: visible ? 0 : -50,
-        },
-      ],
-    };
-  });
+
   return (
-    <AnimatePresence>
+    <>
       {
-        !visible && (
+        visible && (
           <MotiView
-            style={animatedStyle}
-            className='h-40 w-full rounded-2xl bg-gray-500 mb-4 shadow-md  shadow-black'
+            className='h-40 w-full rounded-2xl bg-gray-500 my-2 shadow-md  shadow-black '
             from={{
               opacity: 0,
               translateY: -50
             }}
-            layout={Layout}
             animate={{
               opacity: 1,
               translateY: 0
@@ -49,6 +41,7 @@ export function Card({ visible = true, isActive, createdAt, title, chatid, remov
               opacity: 0,
               translateY: -50
             }}
+            exitTransition={{ type: 'timing', duration: 2000 }}
             transition={{
               type: 'timing',
               duration: 350,
@@ -66,17 +59,28 @@ export function Card({ visible = true, isActive, createdAt, title, chatid, remov
                     end={[1, 1]}
                     className='rounded-t-2xl pb-1 h-28 '
                   >
-
                     <View className='px-5 pt-4'>
                       <Text className='text-white font-regular text-sm'>
                         {createdAt}
                       </Text>
                     </View>
-                    <View className='px-5 py-3 w-fit'>
-                      <Text className='text-white text-base font-regular '>
-                        {title}
-                      </Text>
-                    </View>
+
+                    {
+                      editable ?
+                        <View className='px-5 py-3 w-fit'>
+                          <TextInput
+                            className='text-white text-base font-regular '
+                          />
+                        </View>
+
+                        :
+                        <View className='px-5 py-3 w-fit'>
+                          <Text className='text-white text-base font-regular '>
+                            {title}
+                          </Text>
+                        </View>
+                    }
+
                   </LinearGradient>
                   :
                   <View className='h-28'>
@@ -85,11 +89,22 @@ export function Card({ visible = true, isActive, createdAt, title, chatid, remov
                         {createdAt}
                       </Text>
                     </View>
-                    <View className='px-5 py-3 w-fit'>
-                      <Text className='text-white text-base font-regular '>
-                        {title}
-                      </Text>
-                    </View>
+                    {
+                      editable ?
+                        <View className='px-5 py-3 w-fit'>
+                          <TextInput
+                            className='text-white text-base font-regular '
+                          />
+                        </View>
+
+                        :
+
+                        <View className='px-5 py-3 w-fit'>
+                          <Text className='text-white text-base font-regular '>
+                            {title}
+                          </Text>
+                        </View>
+                    }
                   </View>
               }
             </TouchableOpacity>
@@ -104,6 +119,7 @@ export function Card({ visible = true, isActive, createdAt, title, chatid, remov
               </TouchableOpacity>
 
               <TouchableOpacity
+                onPress={changeTitle}
                 activeOpacity={0.6}
               >
                 <Feather
@@ -114,7 +130,10 @@ export function Card({ visible = true, isActive, createdAt, title, chatid, remov
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={removeChat}
+                onPress={() => {
+                  // setClassView('h-20')
+                  removeChat()
+                }}
                 activeOpacity={0.6}
               >
                 <Feather
@@ -124,8 +143,11 @@ export function Card({ visible = true, isActive, createdAt, title, chatid, remov
                 />
               </TouchableOpacity>
             </View>
+
           </MotiView>
-        )}
-    </AnimatePresence>
+        )
+      }
+    </>
+
   );
 }

@@ -12,7 +12,7 @@ export function ListEmpty() {
   }, []);
 
   return (
-    <MotiView className='flex-1  h-80'
+    <MotiView className='h-80'
       from={{
         opacity: 0,
         translateY: -50

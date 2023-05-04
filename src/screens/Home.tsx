@@ -14,9 +14,10 @@ import { Card } from '../components/Card';
 import { ListEmpty } from '../components/ListEmpty';
 import { Header } from '../components/Header';
 import { Icon } from '../components/Icon';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Loading } from '../components/Loading';
 import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
+import { messageChangeTitle } from '../storage/message/messageChangeTitle';
 
 export type ChatProps = {
   title: string;
@@ -25,6 +26,7 @@ export type ChatProps = {
 }
 
 export function Home() {
+
   const [message, setMessage] = useState<ChatProps[]>([]);
   const [visible, setVisible] = useState(true);
   const [removeId, setRemoveId] = useState('');
@@ -79,18 +81,28 @@ export function Home() {
     try {
       setVisible(false);
       setRemoveId(chatid);
-      console.log('remove');
 
       await messageRemoveChat(chatid);
-      setVisible(true);
 
       setMessage(prev => prev.filter(item => item.chatid !== chatid))
+      setVisible(true);
+
     } catch (error) {
       console.log('ErrorRemove', error);
     } finally {
     }
   }
+
   console.log(visible);
+
+  async function handleChangeTitle(chatid: string, title: string) {
+    try {
+      await messageChangeTitle(chatid, title);
+      fetchMessagesData();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useFocusEffect(useCallback(() => {
     fetchMessagesData()
@@ -101,11 +113,14 @@ export function Home() {
       <Header />
       {
         isLoading ?
-          <View>
-            <FlatList
+          <MotiView
+            className='flex-1'
+          >
+            <Animated.FlatList
               data={message}
+              layout={Layout}
               keyExtractor={(item) => item.chatid}
-              contentContainerStyle={{ paddingBottom: 130 }}
+              contentContainerStyle={[message.length === 0 && { flex: 1, justifyContent: 'center' }, { paddingBottom: 130 }]}
               renderItem={({ item, index }) => (
                 <Animated.View
                   layout={Layout}
@@ -115,7 +130,8 @@ export function Home() {
                     title={item.title}
                     createdAt={item.createdAt}
                     isActive={index == 0 && true}
-                    visible={removeId === item.chatid}
+                    visible={true}
+                    changeTitle={() => handleChangeTitle(item.chatid, '')}
                     removeChat={() => handleRemoveChat(item.chatid)}
                   />
                 </Animated.View>
@@ -126,7 +142,7 @@ export function Home() {
                 <ListEmpty />
               )}
             />
-          </View>
+          </MotiView>
           :
           <Loading />
       }
@@ -146,7 +162,7 @@ export function Home() {
         }}
       >
         <Icon
-          className='h-16 w-16'
+          className='h-16 w-16 shadow-lg shadow-purple-700'
           background='bg-purple-mid'
           activeOpacity={0.9}
           onPress={handleCreateItem}
@@ -154,7 +170,7 @@ export function Home() {
           <Feather
             name='plus'
             size={24}
-            color={colors.zinc[300]}
+            color={colors.zinc[200]}
           />
         </Icon>
       </MotiView>
