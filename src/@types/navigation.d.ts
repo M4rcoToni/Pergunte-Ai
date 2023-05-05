@@ -3,6 +3,7 @@ export declare global {
     interface RootParamList {
       Chat: {
         chatid: string;
+        title: string;
       };
     }
   }

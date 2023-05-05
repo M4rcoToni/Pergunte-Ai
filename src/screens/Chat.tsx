@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Alert, FlatList, Text, TouchableOpacity } from 'react-native';
 import { MotiText } from 'moti';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -9,7 +9,6 @@ import { Feather } from '@expo/vector-icons';
 
 import { chatGetAll } from '../storage/chat/chatGetAll';
 
-import { SendArea } from '../components/SendArea';
 import { Icon } from '../components/Icon';
 import { chatCreate } from '../storage/chat/chatCreate';
 import { Input } from '../components/Input';
@@ -17,6 +16,7 @@ import { Input } from '../components/Input';
 
 type RouteParams = {
   chatid: string;
+  title: string;
 }
 
 const CHAT_GPD_API_KEY = process.env.CHAT_GPD_API_KEY;
@@ -26,7 +26,7 @@ export function Chat() {
   const param = route.params as RouteParams;
   const navigation = useNavigation();
   const [description, setDescription] = useState('');
-  const [editable, setEditable] = useState(true);
+  const [editable, setEditable] = useState(false);
   const [response, setResponse] = useState<string[]>([]);
 
   const date = new Date;
@@ -35,6 +35,7 @@ export function Chat() {
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
     const id = uuid.v4();
+    console.log(prompt);
 
     try {
       if (prompt.trim().length === 0 || !prompt) {
@@ -49,7 +50,8 @@ export function Chat() {
     }
     setDescription('');
 
-    // setEditable(false);
+    setEditable(false);
+
     // try {
     //   const response = await fetch("https://api.openai.com/v1/engines/text-davinci-003/completions", {
     //     method: 'POST',
@@ -125,7 +127,7 @@ export function Chat() {
         end={[1, 0]}
         className=' flex-1 '
       >
-        <View className='h-32 flex-row py-7 px-4'>
+        <View className='h-24 flex-row pt-4 px-4  items-center'>
           <Icon
             className='h-12 w-12'
             background='bg-trans-100'
@@ -138,62 +140,92 @@ export function Chat() {
               color="white"
             />
           </Icon>
+          <MotiText className='pl-6 font-bold text-white text-xl tracking-wider'>
+            {param.title}
+          </MotiText>
         </View>
         {
-          response &&
-          <FlatList
-            className='flex-1 py-6 px-3 rounded-t-3xl bg-gray-back '
-            data={response}
-            renderItem={({ item, index }) => (
-              <>
-                {
-                  index % 2 !== 1 ?
-                    <View className='flex-wrap-reverse'>
-                      <View
-                        className='bg-gray-600  m-3 p-4 rounded-t-2xl rounded-l-2xl items-end '
-                      >
-                        <Text
-                          key={index}
-                          className='text-white font-regular text-base'
+          response.length ?
+            <FlatList
+              className='flex-1 py-6 px-3 rounded-t-3xl bg-gray-back '
+              data={response}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <>
+                  {
+                    index % 2 !== 1 ?
+                      <View className='flex-wrap-reverse'>
+                        <View
+                          className='bg-gray-600  m-3 p-4 rounded-t-2xl rounded-l-2xl items-end '
                         >
-                          {item}
-                        </Text>
-                      </View>
-                    </ View>
-                    :
-                    <View className='flex-wrap'>
-                      <View
-                        className='bg-gray-500  flex-wrap m-3 p-4 rounded-t-2xl rounded-r-2xl '
-                      >
-                        <TypeWriter
-                          key={index}
-                          className='text-white font-regular text-base'
-                          typing={1}
+                          <Text
+                            key={index}
+                            className='text-white font-regular text-base'
+                          >
+                            {item}
+                          </Text>
+                        </View>
+                      </ View>
+                      :
+                      <View className='flex-wrap'>
+                        <View
+                          className='bg-gray-500  flex-wrap m-3 p-4 rounded-t-2xl rounded-r-2xl '
                         >
-                          {item}
-                        </TypeWriter >
+                          {
+                            // arrumar essa logica
+                            response.length > 0 ?
+                              <Text
+                                key={index}
+                                className='text-white font-regular text-base'
+                              >
+                                {item}
+                              </Text>
+                              :
+                              <TypeWriter
+                                key={index}
+                                className='text-white font-regular text-base'
+                                typing={1}
+                              >
+                                {item}
+                              </TypeWriter >
+                          }
+                        </View>
                       </View>
-                    </View>
-                }
-              </>
-            )}
-            contentContainerStyle={[response.length === 0 && { flex: 1, justifyContent: 'center' }, { paddingBottom: 130 }]}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={() => (
+                  }
+                </>
+              )}
+              contentContainerStyle={[response.length === 0 && { flex: 1, justifyContent: 'center' }, { paddingBottom: 140 }]}
+              showsVerticalScrollIndicator={false}
+            />
+            :
+            <View
+              className='flex-1 rounded-t-3xl bg-gray-back justify-center items-center'
+            >
               <MotiText
-                className='text-3xl self-center text-white font-extrabold tracking-wider '
+                className='text-3xl self-center text-white font-extrabold tracking-wider mb-20'
                 from={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ type: 'timing', duration: 1000 }}
               >
-                Bem vindo, {"\n"}como posso te ajudar?
+                Bem vindo,{'\n'}
+                <MotiText className='font-regular text-2xl'>
+                  como posso te ajudar?
+                </MotiText>
               </MotiText>
-            )}
-          />
+            </View>
+
         }
         <View className='absolute bottom-5 mb-3 mx-4 '>
-          {/* arrumar rerenders */}
-          <Input />
+          <Input
+            editable={editable}
+            onChangeText={(text) => {
+              if (text.trim().length > 4) {
+                setEditable(true)
+                setDescription(text)
+              }
+            }}
+            onPress={handlefetchDataOpenAi}
+          />
         </View>
       </LinearGradient>
     </SafeAreaView>

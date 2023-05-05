@@ -8,20 +8,52 @@ import { Feather } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import { useState } from 'react';
+import { messageChangeTitle } from '../storage/message/messageChangeTitle';
+import { messageGetAll } from '../storage/message/messageGetAll';
+import { messageRemoveChat } from '../storage/message/messageRemoveChat';
 
 type Props = {
   chatid: string;
   title: string;
   createdAt: string;
   isActive: boolean;
-  visible: boolean;
-  editable?: boolean;
-  removeChat: () => void;
-  changeTitle: () => void;
+  changeCard: () => void;
 }
 
-export function Card({ visible = true, changeTitle, editable, isActive, createdAt, title, chatid, removeChat }: Props) {
+export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) {
   const navigation = useNavigation();
+  const [newTitle, setNewTitle] = useState('');
+  const [editable, setEditable] = useState(false);
+  const [visible, setVisible] = useState(true);
+
+
+  async function handleChangeTitle(chatid: string, title: string) {
+    try {
+      if (title.length) {
+        await messageChangeTitle(chatid, title);
+        setTimeout(() => {
+          changeCard()
+        }, 800);
+      }
+      setEditable(false)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleRemoveChat(chatid: string) {
+    try {
+      setVisible(false)
+      await messageRemoveChat(chatid);
+
+      setTimeout(() => {
+        changeCard()
+      }, 800);
+    } catch (error) {
+      console.log('ErrorRemove', error);
+    }
+  }
 
   return (
     <Animated.View
@@ -44,53 +76,61 @@ export function Card({ visible = true, changeTitle, editable, isActive, createdA
                 opacity: 0,
                 translateY: -50
               }}
-              exitTransition={{ type: 'timing', duration: 400 }}
+              exitTransition={{ type: 'timing', duration: 350 }}
               transition={{
                 type: 'timing',
                 duration: 350,
               }}
             >
               <TouchableOpacity
-                onPress={() => navigation.navigate('Chat', { chatid })}
+                onPress={() => navigation.navigate('Chat', { chatid, title })}
                 activeOpacity={0.8}
               >
                 {
                   isActive ?
-                    <LinearGradient
-                      colors={['#009fc6', '#b000c3']}
-                      start={[0, 0]}
-                      end={[1, 1]}
-                      className='rounded-t-2xl pb-1 h-28 '
+                    <MotiView
+                      from={{ opacity: 0, }}
+                      animate={{ opacity: 1, }}
+                      transition={{ type: 'timing', duration: 450 }}
                     >
-                      <View className='px-5 pt-4'>
-                        <Text className='text-white font-regular text-sm'>
-                          {createdAt}
-                        </Text>
-                      </View>
+                      <LinearGradient
+                        colors={['#009fc6', '#b000c3']}
+                        start={[0, 0]}
+                        end={[1, 1]}
+                        className='rounded-t-2xl pb-1 h-28 '
+                      >
+                        <View className='px-5 pt-5'>
+                          <Text className='text-white font-regular text-xs'>
+                            {createdAt}
+                          </Text>
+                        </View>
 
-                      {
-                        editable ?
-                          <View className='px-5 py-3 w-fit'>
-                            <TextInput
-                              placeholder='Digite um nome'
-                              placeholderTextColor='#fff'
-                              className='text-white text-base font-regular '
-                            />
-                          </View>
+                        {
+                          editable ?
+                            <View className='px-5 py-3 w-fit '>
+                              <TextInput
+                                placeholder='Digite um titulo'
+                                placeholderTextColor='#fff'
+                                onChangeText={setNewTitle}
+                                onEndEditing={() => handleChangeTitle(chatid, newTitle)}
+                                className='text-white text-base font-regular'
+                              />
+                            </View>
 
-                          :
-                          <View className='px-5 py-3 w-fit'>
-                            <Text className='text-white text-base font-regular '>
-                              {title}
-                            </Text>
-                          </View>
-                      }
+                            :
+                            <View className='px-5 py-3 w-fit'>
+                              <Text className='text-white text-base font-regular '>
+                                {title}
+                              </Text>
+                            </View>
+                        }
 
-                    </LinearGradient>
+                      </LinearGradient>
+                    </MotiView>
                     :
                     <View className='h-28'>
-                      <View className='px-5 pt-4'>
-                        <Text className='text-white font-regular text-sm'>
+                      <View className='px-5 pt-5'>
+                        <Text className='text-white font-regular text-xs'>
                           {createdAt}
                         </Text>
                       </View>
@@ -98,16 +138,17 @@ export function Card({ visible = true, changeTitle, editable, isActive, createdA
                         editable ?
                           <View className='px-5 py-3 w-fit'>
                             <TextInput
-                              placeholder='Digite um nome'
-                              className='text-white text-base font-regular '
+                              placeholder='Digite um titulo'
+                              placeholderTextColor='#fff'
+                              onChangeText={setNewTitle}
+                              onEndEditing={() => handleChangeTitle(chatid, newTitle)}
+                              className='text-white text-base font-regular'
                             />
                           </View>
-
                           :
-
                           <View className='px-5 py-3 w-fit'>
                             <Text className='text-white text-base font-regular '>
-                              {title}
+                              {editable ? '' : title}
                             </Text>
                           </View>
                       }
@@ -127,18 +168,18 @@ export function Card({ visible = true, changeTitle, editable, isActive, createdA
                 </View>
 
                 <TouchableOpacity
-                  onPress={changeTitle}
+                  onPress={() => setEditable(true)}
                   activeOpacity={0.6}
                 >
                   <Feather
                     name='edit-3'
                     size={24}
-                    color={colors.zinc[600]}
+                    color={editable ? colors.purple[400] : colors.zinc[600]}
                   />
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  onPress={removeChat}
+                  onPress={() => handleRemoveChat(chatid)}
                   activeOpacity={0.6}
                 >
                   <Feather

@@ -19,6 +19,7 @@ import { ListEmpty } from '../components/ListEmpty';
 import { Header } from '../components/Header';
 import { Icon } from '../components/Icon';
 import { Loading } from '../components/Loading';
+import { ChatStorageDTO } from '../storage/chat/ChatStorageDTO';
 
 export type ChatProps = {
   title: string;
@@ -29,10 +30,7 @@ export type ChatProps = {
 export function Home() {
 
   const [message, setMessage] = useState<ChatProps[]>([]);
-  const [visible, setVisible] = useState(true);
-  const [selectedId, setSelectedId] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [editable, setEditable] = useState(false);
 
   const time = dayjs().format('DD/MM/YYYY');
 
@@ -50,59 +48,29 @@ export function Home() {
   }
 
   async function handleCreateItem() {
-    const id = uuid.v4();
-
-    console.log('DATE', time);
-
-    const newMessage: ChatProps = {
-      title: 'Novo Chat',
-      chatid: id.toString(),
-      createdAt: time
-    }
-    addFirstItem(newMessage)
-  }
-
-  async function addFirstItem(message: ChatProps) {
     try {
-      await messageCreate(message);
+      const id = uuid.v4();
+      console.log(time);
 
-      await chatCreate({
-        chatid: message.chatid,
-        title: message.title,
+      const newMessage: ChatStorageDTO = {
+        title: 'Novo Chat',
+        chatid: id.toString(),
         data: [],
-        createdAt: time,
-      }, message.chatid)
+        createdAt: time
+      }
 
-      setMessage(prev => [...prev, message])
+      await messageCreate(newMessage);
+
+      await chatCreate(newMessage, id.toString())
+
+      setMessage(prev => [...prev, newMessage])
     } catch (error) {
-      console.log('Modal', error);
+      console.log(error);
     }
   }
 
-  async function handleRemoveChat(chatid: string) {
+  async function fecheData() {
     try {
-      setVisible(false);
-      setSelectedId(chatid);
-
-      await messageRemoveChat(chatid);
-
-      setTimeout(() => {
-        setMessage(prev => prev.filter(item => item.chatid !== chatid))
-        setVisible(true);
-      }, 700);
-
-    } catch (error) {
-      console.log('ErrorRemove', error);
-    } finally {
-    }
-  }
-
-
-  async function handleChangeTitle(chatid: string, title: string) {
-    try {
-      setEditable(true)
-      setSelectedId(chatid)
-      await messageChangeTitle(chatid, title);
       const data = await messageGetAll();
       setMessage(data)
     } catch (error) {
@@ -131,10 +99,7 @@ export function Home() {
                   title={item.title}
                   createdAt={item.createdAt}
                   isActive={index == 0 && true}
-                  visible={selectedId === item.chatid ? visible : true}
-                  editable={selectedId === item.chatid ? editable : false}
-                  changeTitle={() => handleChangeTitle(item.chatid, '')}
-                  removeChat={() => handleRemoveChat(item.chatid)}
+                  changeCard={fecheData}
                 />
               )
               }

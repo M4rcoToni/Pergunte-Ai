@@ -27,7 +27,7 @@ export function ListEmpty() {
       }}
       transition={{
         type: 'timing',
-        duration: 500,
+        duration: 400,
       }}
     >
       <LinearGradient
