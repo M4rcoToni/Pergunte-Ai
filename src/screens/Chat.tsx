@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Alert, FlatList, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, FlatList, Text, TouchableOpacity } from 'react-native';
 import { MotiText } from 'moti';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
@@ -12,7 +12,7 @@ import { chatGetAll } from '../storage/chat/chatGetAll';
 import { Icon } from '../components/Icon';
 import { chatCreate } from '../storage/chat/chatCreate';
 import { Input } from '../components/Input';
-
+import { Alert } from '../components/Alert';
 
 type RouteParams = {
   chatid: string;
@@ -28,18 +28,20 @@ export function Chat() {
   const [description, setDescription] = useState('');
   const [editable, setEditable] = useState(false);
   const [response, setResponse] = useState<string[]>([]);
-
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const date = new Date;
   const time = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
 
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
-    const id = uuid.v4();
-    console.log(prompt);
+    if (prompt.length === 0) {
+      setIsAlertVisible(true)
+    }
+    console.log(prompt.length);
 
     try {
       if (prompt.trim().length === 0 || !prompt) {
-        Alert.alert('ChatGPT', 'Digite uma pergunta');
+
       } else {
         setResponse(prevResponses => [...prevResponses, prompt]);
         setResponse(prevResponses => [...prevResponses, prompt.trim()]);
@@ -85,7 +87,7 @@ export function Chat() {
 
   async function fechtData(chatid: string) {
     try {
-      const chatData = await chatGetAll(param.chatid);
+      const chatData = await chatGetAll(chatid);
       const response = chatData.data;
       console.log('GET IN CHAT', response)
       if (response) {
@@ -218,16 +220,19 @@ export function Chat() {
         <View className='absolute bottom-5 mb-3 mx-4 '>
           <Input
             editable={editable}
-            onChangeText={(text) => {
-              if (text.trim().length > 4) {
-                setEditable(true)
-                setDescription(text)
-              }
-            }}
+            onChangeText={setDescription}
+            value={description}
             onPress={handlefetchDataOpenAi}
           />
         </View>
       </LinearGradient>
+      <Alert
+        visible={isAlertVisible}
+        onConfirmPressed={() => setIsAlertVisible(false)}
+        title={'Atenção'}
+        message={'Digite uma pergunta'}
+        confirmText={'Ok'}
+      />
     </SafeAreaView>
   );
 }
