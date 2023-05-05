@@ -50,7 +50,7 @@ export function Home() {
   async function handleCreateItem() {
     try {
       const id = uuid.v4();
-      console.log(time);
+      console.log('handleCreateItem', time);
 
       const newMessage: ChatStorageDTO = {
         title: 'Novo Chat',

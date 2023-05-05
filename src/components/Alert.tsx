@@ -1,5 +1,3 @@
-
-import { useState } from 'react';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import colors from 'tailwindcss/colors';
 

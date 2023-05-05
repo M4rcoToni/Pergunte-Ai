@@ -13,6 +13,7 @@ import { Icon } from '../components/Icon';
 import { chatCreate } from '../storage/chat/chatCreate';
 import { Input } from '../components/Input';
 import { Alert } from '../components/Alert';
+import dayjs from 'dayjs';
 
 type RouteParams = {
   chatid: string;
@@ -29,8 +30,8 @@ export function Chat() {
   const [editable, setEditable] = useState(false);
   const [response, setResponse] = useState<string[]>([]);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const date = new Date;
-  const time = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
+
+  const time = dayjs().format('DD/MM/YYYY');
 
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
