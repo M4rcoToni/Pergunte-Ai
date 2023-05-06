@@ -2,10 +2,6 @@ import { TextInput, TextInputProps, TouchableOpacity } from 'react-native';
 import { MotiView } from 'moti';
 
 import { Feather } from '@expo/vector-icons';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import colors from 'tailwindcss/colors';
-import { Alert } from './Alert';
-import { useState } from 'react';
 
 type Props = TextInputProps & {
   editable: boolean;
@@ -33,6 +29,8 @@ export function Input({ editable = false, onPress, ...rest }: Props) {
       <TextInput
         placeholder='Digite sua pergunta'
         placeholderTextColor='#fff'
+        autoCorrect={false}
+        returnKeyType='done'
         className='bg-gray-500 rounded-full h-14 w-72 px-8 font-regular text-base text-white border border-gray-500 focus:border-cyan-300 '
         {...rest}
       />

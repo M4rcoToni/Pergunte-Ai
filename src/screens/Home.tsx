@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import { useState, useCallback, useRef } from 'react';
+import { View, SafeAreaView, TextInput } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { MotiView, } from 'moti';
 import dayjs from 'dayjs';

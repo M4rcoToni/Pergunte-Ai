@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AnimatePresence, MotiView, } from 'moti';
 import Animated, { Layout } from 'react-native-reanimated';
@@ -8,7 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { messageChangeTitle } from '../storage/message/messageChangeTitle';
 import { messageGetAll } from '../storage/message/messageGetAll';
 import { messageRemoveChat } from '../storage/message/messageRemoveChat';
@@ -26,6 +26,7 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
   const [newTitle, setNewTitle] = useState('');
   const [editable, setEditable] = useState(false);
   const [visible, setVisible] = useState(true);
+  const changeTitleInputRef = useRef<TextInput>(null);
 
 
   async function handleChangeTitle(chatid: string, title: string) {
@@ -54,6 +55,10 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
       console.log('ErrorRemove', error);
     }
   }
+  useEffect(() => {
+    changeTitleInputRef.current?.focus();
+    console.log('Ativo', editable);
+  }, [editable]);
 
   return (
     <Animated.View
@@ -112,6 +117,10 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
                                 placeholder='Digite um titulo'
                                 placeholderTextColor='#fff'
                                 onChangeText={setNewTitle}
+                                ref={changeTitleInputRef}
+                                onFocus={() => changeTitleInputRef.current?.focus()}
+                                autoCorrect={false}
+                                returnKeyType='done'
                                 onEndEditing={() => handleChangeTitle(chatid, newTitle)}
                                 className='text-white text-base font-regular'
                               />
@@ -141,6 +150,10 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
                               placeholder='Digite um titulo'
                               placeholderTextColor='#fff'
                               onChangeText={setNewTitle}
+                              ref={changeTitleInputRef}
+                              onFocus={() => changeTitleInputRef.current?.focus()}
+                              autoCorrect={false}
+                              returnKeyType='done'
                               onEndEditing={() => handleChangeTitle(chatid, newTitle)}
                               className='text-white text-base font-regular'
                             />

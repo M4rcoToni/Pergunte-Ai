@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, FlatList, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { SafeAreaView, View, FlatList, Text, TouchableOpacity, TextInput, findNodeHandle } from 'react-native';
 import { MotiText } from 'moti';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
@@ -35,7 +35,7 @@ export function Chat() {
 
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
-    if (prompt.length === 0) {
+    if (prompt.length < 10) {
       setIsAlertVisible(true)
     }
     console.log(prompt.length);
