@@ -1,16 +1,15 @@
-import { View, Text, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
 import { AnimatePresence, MotiView, } from 'moti';
 import Animated, { Layout } from 'react-native-reanimated';
 
 import { Feather } from '@expo/vector-icons';
-
+import { LinearGradient } from 'expo-linear-gradient';
 import colors from 'tailwindcss/colors';
 
-import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useRef, useState } from 'react';
 import { messageChangeTitle } from '../storage/message/messageChangeTitle';
-import { messageGetAll } from '../storage/message/messageGetAll';
 import { messageRemoveChat } from '../storage/message/messageRemoveChat';
 
 type Props = {
@@ -50,14 +49,17 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
 
       setTimeout(() => {
         changeCard()
-      }, 800);
+      }, 600);
     } catch (error) {
       console.log('ErrorRemove', error);
     }
   }
   useEffect(() => {
-    changeTitleInputRef.current?.focus();
-    console.log('Ativo', editable);
+    if (changeTitleInputRef.current) {
+
+      changeTitleInputRef.current?.focus();
+      console.log('Ativo', editable);
+    }
   }, [editable]);
 
   return (

@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MESSAGE_COLLECTION } from '../storageConfig';
-import { ChatStorageDTO } from '../chat/ChatStorageDTO';
+
 import { messageGetAll } from './messageGetAll';
+
 import { ChatProps } from '../../screens/Home';
 
 export async function messageCreate(messages: ChatProps) {

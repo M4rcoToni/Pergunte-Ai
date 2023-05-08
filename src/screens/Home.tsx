@@ -2,10 +2,10 @@ import { useState, useCallback, useRef } from 'react';
 import { View, SafeAreaView, TextInput } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { MotiView, } from 'moti';
-import dayjs from 'dayjs';
 import colors from 'tailwindcss/colors';
 import { Feather } from '@expo/vector-icons';
 import Animated, { Layout } from 'react-native-reanimated';
+import { getDay } from '../utils/dayjs';
 
 import uuid from 'react-native-uuid';
 import { messageGetAll } from '../storage/message/messageGetAll';
@@ -26,13 +26,11 @@ export type ChatProps = {
   chatid: string;
   createdAt: string;
 }
-
 export function Home() {
 
   const [message, setMessage] = useState<ChatProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const time = dayjs().format('DD/MM/YYYY');
+  const time = getDay({ format: 'DD/MM/YYYY' });
 
   async function fetchMessagesData() {
     try {
@@ -83,7 +81,7 @@ export function Home() {
   }, []));
 
   return (
-    <SafeAreaView className='flex-1 bg-gray-back pt-10 px-6'>
+    <View className='flex-1 bg-gray-back pt-10 px-6'>
       <Header />
       {
         isLoading ?
@@ -141,6 +139,6 @@ export function Home() {
           />
         </Icon>
       </MotiView>
-    </SafeAreaView>
+    </View>
   )
 }

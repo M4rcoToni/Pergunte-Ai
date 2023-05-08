@@ -27,7 +27,7 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider >
+    <SafeAreaProvider className='bg-gray-back' >
       <StatusBar
         style="light"
         backgroundColor="transparent"

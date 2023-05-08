@@ -14,6 +14,9 @@ import { chatCreate } from '../storage/chat/chatCreate';
 import { Input } from '../components/Input';
 import { Alert } from '../components/Alert';
 import dayjs from 'dayjs';
+import { Message } from '../components/Message';
+import { MessageStorageDTO } from '../storage/chat/ChatStorageDTO';
+import { getDay } from '../utils/dayjs';
 
 type RouteParams = {
   chatid: string;
@@ -26,33 +29,31 @@ export function Chat() {
   const route = useRoute();
   const param = route.params as RouteParams;
   const navigation = useNavigation();
+
   const [description, setDescription] = useState('');
   const [editable, setEditable] = useState(false);
-  const [response, setResponse] = useState<string[]>([]);
+  const [response, setResponse] = useState<MessageStorageDTO[]>([]);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
-
-  const time = dayjs().format('DD/MM/YYYY');
 
   async function handlefetchDataOpenAi() {
     const prompt = description.trim();
+    const time = getDay({ format: 'HH:mm' });
+
     if (prompt.length < 10) {
       setIsAlertVisible(true)
+      return
     }
-    console.log(prompt.length);
-
     try {
-      if (prompt.trim().length === 0 || !prompt) {
 
-      } else {
-        setResponse(prevResponses => [...prevResponses, prompt]);
-        setResponse(prevResponses => [...prevResponses, prompt.trim()]);
-        console.log('pro', prompt);
-      }
+      setResponse(prevResponses => [...prevResponses, { message: prompt, createdAt: time }]);
+      setTimeout(() => {
+
+        setResponse(prevResponses => [...prevResponses, { message: prompt.trim(), createdAt: getDay({ format: 'HH:mm' }) }]);
+      }, 10000);
     } catch (error) {
       console.log(error);
     }
     setDescription('');
-
     setEditable(false);
 
     // try {
@@ -101,15 +102,19 @@ export function Chat() {
   }
 
   async function saveData() {
-    const chat = await chatGetAll(param.chatid)
-    await chatCreate(
-      {
-        title: chat.title,
-        chatid: param.chatid,
-        data: response,
-        createdAt: time
-      }
-      , param.chatid)
+    try {
+      const chat = await chatGetAll(param.chatid)
+      await chatCreate(
+        {
+          title: chat.title,
+          chatid: param.chatid,
+          data: response,
+          createdAt: chat.createdAt
+        }
+        , param.chatid)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -123,7 +128,7 @@ export function Chat() {
   }, [response]);
 
   return (
-    <SafeAreaView className='flex-1'>
+    <View className='flex-1'>
       <LinearGradient
         colors={['#00a5ce', '#b000c3']}
         start={[0, 0]}
@@ -154,56 +159,18 @@ export function Chat() {
               data={response}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => (
-                <>
-                  {
-                    index % 2 !== 1 ?
-                      <View className='flex-wrap-reverse'>
-                        <View
-                          className='bg-gray-600  m-3 p-4 rounded-t-2xl rounded-l-2xl items-end '
-                        >
-                          <Text
-                            key={index}
-                            className='text-white font-regular text-base'
-                          >
-                            {item}
-                          </Text>
-                        </View>
-                      </ View>
-                      :
-                      <View className='flex-wrap'>
-                        <View
-                          className='bg-gray-500  flex-wrap m-3 p-4 rounded-t-2xl rounded-r-2xl '
-                        >
-                          {
-                            // arrumar essa logica
-                            response.length > 0 ?
-                              <Text
-                                key={index}
-                                className='text-white font-regular text-base'
-                              >
-                                {item}
-                              </Text>
-                              :
-                              <TypeWriter
-                                key={index}
-                                className='text-white font-regular text-base'
-                                typing={1}
-                              >
-                                {item}
-                              </TypeWriter >
-                          }
-                        </View>
-                      </View>
-                  }
-                </>
+                <Message
+                  key={index}
+                  createdAt={item.createdAt}
+                  message={item.message}
+                  response={index % 2 !== 1}
+                />
               )}
               contentContainerStyle={[response.length === 0 && { flex: 1, justifyContent: 'center' }, { paddingBottom: 140 }]}
               showsVerticalScrollIndicator={false}
             />
             :
-            <View
-              className='flex-1 rounded-t-3xl bg-gray-back justify-center items-center'
-            >
+            <View className='flex-1 rounded-t-3xl bg-gray-back justify-center items-center'>
               <MotiText
                 className='text-3xl self-center text-white font-extrabold tracking-wider mb-20'
                 from={{ opacity: 0 }}
@@ -234,6 +201,6 @@ export function Chat() {
         message={'Digite uma pergunta'}
         confirmText={'Ok'}
       />
-    </SafeAreaView>
+    </View>
   );
 }

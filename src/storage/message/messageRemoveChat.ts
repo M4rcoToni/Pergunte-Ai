@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { messageGetAll } from './messageGetAll';
 import { CHAT_COLLECTION, MESSAGE_COLLECTION } from '../storageConfig';
 
+import { messageGetAll } from './messageGetAll';
 
 export async function messageRemoveChat(chatId: string) {
   try {

@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { chatGetAll } from './chatGetAll';
 import { CHAT_COLLECTION } from '../storageConfig';
-import { ChatStorageDTO } from './ChatStorageDTO';
+
 import { messageCreate } from '../message/messageCreate';
-import { ChatProps } from '../../components/Modal/ChatsArea';
 import { messageGetAll } from '../message/messageGetAll';
+
+import { ChatStorageDTO } from './ChatStorageDTO';
+import { ChatProps } from '../../screens/Home';
 
 export async function chatCreate(newChat: ChatStorageDTO, id: string) {
   try {
@@ -22,7 +23,8 @@ export async function chatCreate(newChat: ChatStorageDTO, id: string) {
 
     const firstChat: ChatProps = {
       chatid: newChat.chatid,
-      title: newChat.title
+      title: newChat.title,
+      createdAt: newChat.createdAt
     }
 
     await messageCreate(firstChat);
