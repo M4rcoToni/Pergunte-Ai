@@ -5,7 +5,12 @@ import { Feather } from '@expo/vector-icons';
 import { Icon } from './Icon';
 import colors from 'tailwindcss/colors';
 
-export function Header() {
+type HeaderProps = {
+  removeMessages: () => void;
+  isActive: boolean;
+}
+
+export function Header({ removeMessages, isActive }: HeaderProps) {
   return (
     <MotiView className='flex-row  mb-5'>
       <View className='flex-1'>
@@ -17,13 +22,19 @@ export function Header() {
           />
         </Icon>
       </View>
-      <Icon>
-        <Feather
-          name='trash-2'
-          size={20}
-          color={colors.zinc[300]}
-        />
-      </Icon>
+      {
+        isActive &&
+        <Icon
+          onPress={removeMessages}
+        >
+          <Feather
+            name='trash-2'
+            size={20}
+            color={colors.zinc[300]}
+          />
+        </Icon>
+      }
+
       <Icon
         className='ml-6 '
       >

@@ -1,21 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, View, FlatList, Text, TouchableOpacity, TextInput, findNodeHandle } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList } from 'react-native';
 import { MotiText } from 'moti';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import uuid from 'react-native-uuid';
-import TypeWriter from 'react-native-typewriter';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 
 import { chatGetAll } from '../storage/chat/chatGetAll';
+import { MessageStorageDTO } from '../storage/chat/ChatStorageDTO';
+import { chatCreate } from '../storage/chat/chatCreate';
 
 import { Icon } from '../components/Icon';
-import { chatCreate } from '../storage/chat/chatCreate';
 import { Input } from '../components/Input';
 import { Alert } from '../components/Alert';
-import dayjs from 'dayjs';
 import { Message } from '../components/Message';
-import { MessageStorageDTO } from '../storage/chat/ChatStorageDTO';
+
 import { getDay } from '../utils/dayjs';
 
 type RouteParams = {
@@ -49,7 +47,7 @@ export function Chat() {
       setTimeout(() => {
 
         setResponse(prevResponses => [...prevResponses, { message: prompt.trim(), createdAt: getDay({ format: 'HH:mm' }) }]);
-      }, 10000);
+      }, 1000);
     } catch (error) {
       console.log(error);
     }
