@@ -7,9 +7,9 @@ type Props = {
   title: string;
   message: string;
   confirmText: string;
-  cancelText: string;
+  cancelText?: string;
   onConfirmPressed: () => void;
-  onCancelPressed: () => void;
+  onCancelPressed?: () => void;
   cancelVisible?: boolean;
 }
 

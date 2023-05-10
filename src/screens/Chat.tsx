@@ -41,48 +41,42 @@ export function Chat() {
       setIsAlertVisible(true)
       return
     }
-    try {
-
-      setResponse(prevResponses => [...prevResponses, { message: prompt, createdAt: time }]);
-      setTimeout(() => {
-
-        setResponse(prevResponses => [...prevResponses, { message: prompt.trim(), createdAt: getDay({ format: 'HH:mm' }) }]);
-      }, 1000);
-    } catch (error) {
-      console.log(error);
-    }
     setDescription('');
     setEditable(false);
 
-    // try {
-    //   const response = await fetch("https://api.openai.com/v1/engines/text-davinci-003/completions", {
-    //     method: 'POST',
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${CHAT_GPD_API_KEY}`,
-    //     },
-    //     body: JSON.stringify({
-    //       prompt: prompt,
-    //       temperature: 0.5,
-    //       max_tokens: 100,
-    //       top_p: 1,
-    //       frequency_penalty: 0,
-    //       presence_penalty: 0,
-    //     }),
-    //   });
-    //   const data = await response.json();
-    //   if (data && data.choices && data.choices.length > 0) {
-    //     const responseText = data.choices[0].text;
+    setResponse(prevResponses => [...prevResponses, { message: prompt, createdAt: time }]);
 
+    try {
+      const response = await fetch("https://api.openai.com/v1/engines/text-davinci-003/completions", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${CHAT_GPD_API_KEY}`,
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          temperature: 0.22,
+          max_tokens: 600,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+        }),
+      });
+      const data = await response.json();
+      console.log('DATA', data);
 
-    //   } else {
-    //     console.log('Erro', 'Não foi possível.');
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // console.log(response);
-    // setEditable(true);
+      if (data && data.choices && data.choices.length > 0) {
+        const responseText = data.choices[0].text;
+        console.log('RESPONSE', responseText);
+
+        setResponse(prevResponses => [...prevResponses, { message: responseText.trim(), createdAt: getDay({ format: 'HH:mm' }) }]);
+
+      } else {
+        console.log('Erro', 'Não foi possível.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function fechtData(chatid: string) {
