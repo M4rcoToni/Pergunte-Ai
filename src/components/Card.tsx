@@ -11,6 +11,7 @@ import colors from 'tailwindcss/colors';
 
 import { messageChangeTitle } from '../storage/message/messageChangeTitle';
 import { messageRemoveChat } from '../storage/message/messageRemoveChat';
+import { Alert } from './Alert';
 
 type Props = {
   chatid: string;
@@ -25,6 +26,7 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
   const [newTitle, setNewTitle] = useState('');
   const [editable, setEditable] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const changeTitleInputRef = useRef<TextInput>(null);
 
 
@@ -44,6 +46,7 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
 
   async function handleRemoveChat(chatid: string) {
     try {
+      setIsAlertVisible(false)
       setVisible(false)
       await messageRemoveChat(chatid);
 
@@ -200,7 +203,7 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  onPress={() => handleRemoveChat(chatid)}
+                  onPress={() => setIsAlertVisible(true)}
                   activeOpacity={0.6}
                 >
                   <Feather
@@ -215,6 +218,16 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
           )
         }
       </AnimatePresence>
+      <Alert
+        visible={isAlertVisible}
+        onConfirmPressed={() => handleRemoveChat(chatid)}
+        onCancelPressed={() => setIsAlertVisible(false)}
+        title={'Atenção'}
+        message={'Tem certeza que quer excluir esse chat?'}
+        confirmText={'Excluir'}
+        cancelText={'Cancelar'}
+        cancelVisible={true}
+      />
     </Animated.View>
   );
 }
