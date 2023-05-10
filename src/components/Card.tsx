@@ -130,7 +130,10 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
 
                             :
                             <View className='px-5 py-3 w-fit'>
-                              <Text className='text-white text-base font-regular '>
+                              <Text
+                                className='text-white text-base font-regular '
+                                numberOfLines={2}
+                              >
                                 {title}
                               </Text>
                             </View>
@@ -162,7 +165,10 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
                           </View>
                           :
                           <View className='px-5 py-3 w-fit'>
-                            <Text className='text-white text-base font-regular '>
+                            <Text
+                              className='text-white text-base font-regular '
+                              numberOfLines={2}
+                            >
                               {editable ? '' : title}
                             </Text>
                           </View>

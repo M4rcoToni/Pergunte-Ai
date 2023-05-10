@@ -17,11 +17,13 @@ export function Alert({ message, confirmText, cancelText, cancelVisible = false,
   return (
     <AwesomeAlert
       show={visible}
-      title={title}
-      message={message}
-      closeOnTouchOutside={false}
+      closeOnTouchOutside={true}
       showConfirmButton={true}
+
+      title={title}
       titleStyle={style.titleStyle}
+
+      message={message}
       messageStyle={style.messageStyle}
 
       confirmText={confirmText}

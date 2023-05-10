@@ -4,11 +4,10 @@ import { MotiView } from 'moti';
 import { Feather } from '@expo/vector-icons';
 
 type Props = TextInputProps & {
-  editable: boolean;
   onPress: () => void;
 }
 
-export function Input({ editable = false, onPress, ...rest }: Props) {
+export function Input({ onPress, ...rest }: Props) {
   return (
     <MotiView
       className='flex-row items-center px-2'

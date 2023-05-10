@@ -39,7 +39,7 @@ export function Home() {
     try {
       setIsLoading(false);
       const data = await messageGetAll();
-      // console.log('CHAT AREA', data);
+
       setMessage(data)
     } catch (error) {
       console.log('CHAT AREA ERROR', error);
@@ -89,8 +89,6 @@ export function Home() {
       setIsAlertVisible(false);
     }
   }
-
-  console.log('isAlertVisible', isAlertVisible);
 
   useFocusEffect(useCallback(() => {
     fetchMessagesData()

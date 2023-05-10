@@ -8,11 +8,11 @@ export async function messageGetAll() {
     const storage = await AsyncStorage.getItem(MESSAGE_COLLECTION);
 
     const messages: ChatProps[] = storage ? JSON.parse(storage) : [];
-    console.log('MGA', messages);
+    // console.log('MGA', messages);
 
     return messages;
 
   } catch (error) {
-    throw 'MG Error' + error;
+    throw 'MGA Error' + error;
   }
 }

@@ -13,8 +13,11 @@ import { Icon } from '../components/Icon';
 import { Input } from '../components/Input';
 import { Alert } from '../components/Alert';
 import { Message } from '../components/Message';
+import { ChatEmpty } from '../components/ChatEmpty';
 
 import { getDay } from '../utils/dayjs';
+import { messageChangeTitle } from '../storage/message/messageChangeTitle';
+import TypeWriter from 'react-native-typewriter';
 
 type RouteParams = {
   chatid: string;
@@ -29,11 +32,11 @@ export function Chat() {
   const navigation = useNavigation();
 
   const [description, setDescription] = useState('');
-  const [editable, setEditable] = useState(false);
+  const [title, setTitle] = useState('');
   const [response, setResponse] = useState<MessageStorageDTO[]>([]);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
 
-  async function handlefetchDataOpenAi() {
+  async function handleFetchDataOpenAi() {
     const prompt = description.trim();
     const time = getDay({ format: 'HH:mm' });
 
@@ -42,7 +45,6 @@ export function Chat() {
       return
     }
     setDescription('');
-    setEditable(false);
 
     setResponse(prevResponses => [...prevResponses, { message: prompt, createdAt: time }]);
 
@@ -63,11 +65,9 @@ export function Chat() {
         }),
       });
       const data = await response.json();
-      console.log('DATA', data);
 
       if (data && data.choices && data.choices.length > 0) {
         const responseText = data.choices[0].text;
-        console.log('RESPONSE', responseText);
 
         setResponse(prevResponses => [...prevResponses, { message: responseText.trim(), createdAt: getDay({ format: 'HH:mm' }) }]);
 
@@ -79,26 +79,33 @@ export function Chat() {
     }
   }
 
-  async function fechtData(chatid: string) {
+  async function fetchData(chatid: string) {
     try {
       const chatData = await chatGetAll(chatid);
       const response = chatData.data;
-      console.log('GET IN CHAT', response)
+      console.log('CHAT', chatData);
+
       if (response) {
         setResponse(response)
       }
 
     } catch (error) {
-      console.log('get error', error);
+      console.log('fetchData error', error);
     }
   }
 
   async function saveData() {
     try {
       const chat = await chatGetAll(param.chatid)
+
+      if (response[0].message) {
+        await handleChangeTitle(param.chatid, response[0].message);
+        setTitle(response[0].message)
+      }
+
       await chatCreate(
         {
-          title: chat.title,
+          title: title,
           chatid: param.chatid,
           data: response,
           createdAt: chat.createdAt
@@ -109,9 +116,19 @@ export function Chat() {
     }
   }
 
+  async function handleChangeTitle(chatid: string, title: string) {
+    try {
+      if (title.length) {
+        await messageChangeTitle(chatid, title);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (param != undefined) {
-      fechtData(param.chatid)
+      fetchData(param.chatid);
     }
   }, []);
 
@@ -125,7 +142,7 @@ export function Chat() {
         colors={['#00a5ce', '#b000c3']}
         start={[0, 0]}
         end={[1, 0]}
-        className=' flex-1 '
+        className='flex-1'
       >
         <View className='h-24 flex-row pt-4 px-4  items-center'>
           <Icon
@@ -140,10 +157,14 @@ export function Chat() {
               color="white"
             />
           </Icon>
-          <MotiText className='pl-6 font-bold text-white text-xl tracking-wider'>
-            {param.title}
-          </MotiText>
+          <TypeWriter className='pl-6 font-bold text-white text-xl tracking-wider'
+            typing={1}
+            numberOfLines={1}
+          >
+            {title ? title.slice(0, 20) : param.title.slice(0, 20)}
+          </TypeWriter>
         </View>
+
         {
           response.length ?
             <FlatList
@@ -162,30 +183,22 @@ export function Chat() {
               showsVerticalScrollIndicator={false}
             />
             :
-            <View className='flex-1 rounded-t-3xl bg-gray-back justify-center items-center'>
-              <MotiText
-                className='text-3xl self-center text-white font-extrabold tracking-wider mb-20'
-                from={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ type: 'timing', duration: 1000 }}
-              >
-                Bem vindo,{'\n'}
-                <MotiText className='font-regular text-2xl'>
-                  como posso te ajudar?
-                </MotiText>
-              </MotiText>
-            </View>
-
+            <ChatEmpty
+              title='Bem vindo,'
+              message='como posso te ajudar?'
+            />
         }
+
         <View className='absolute bottom-5 mb-3 mx-4 '>
           <Input
-            editable={editable}
             onChangeText={setDescription}
             value={description}
-            onPress={handlefetchDataOpenAi}
+            onPress={handleFetchDataOpenAi}
           />
         </View>
+
       </LinearGradient>
+
       <Alert
         visible={isAlertVisible}
         onConfirmPressed={() => setIsAlertVisible(false)}
