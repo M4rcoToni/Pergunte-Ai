@@ -37,7 +37,7 @@ export function ListEmpty() {
         className='rounded-2xl flex-1 justify-center items-center '
       >
         <Text className=' text-3xl self-center text-white font-extrabold tracking-wider'>
-          Pergunta ao Pepe!
+          Pergunte ao Pepe!
         </Text>
         <Text className=' text-xl self-center text-white pt-8 font-regular tracking-wide'>
           Crie o seu Primeiro Chat 🚀

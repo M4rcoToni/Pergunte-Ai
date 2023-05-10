@@ -222,10 +222,10 @@ export function Card({ changeCard, isActive, createdAt, title, chatid }: Props) 
         visible={isAlertVisible}
         onConfirmPressed={() => handleRemoveChat(chatid)}
         onCancelPressed={() => setIsAlertVisible(false)}
-        title={'Atenção'}
-        message={'Tem certeza que quer excluir esse chat?'}
-        confirmText={'Excluir'}
-        cancelText={'Cancelar'}
+        title='Atenção'
+        message='Tem certeza que quer excluir esse chat?'
+        confirmText='Excluir'
+        cancelText='Cancelar'
         cancelVisible={true}
       />
     </Animated.View>

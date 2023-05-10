@@ -100,10 +100,10 @@ export function Home() {
         visible={isAlertVisible}
         onConfirmPressed={() => handleRemoveMessages()}
         onCancelPressed={() => setIsAlertVisible(false)}
-        title={'Atenção'}
-        message={'Tem certeza que excluir todos os chats?'}
-        confirmText={'Ok'}
-        cancelText={'Cancelar'}
+        title='Atenção'
+        message='Tem certeza que excluir todos os chats?'
+        confirmText='Excluir'
+        cancelText='Cancelar'
         cancelVisible={true}
       />
       <Header
