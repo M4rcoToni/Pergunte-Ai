@@ -165,11 +165,11 @@ export function Chat() {
             <Feather name="arrow-left" size={24} color="white" />
           </Icon>
           <TypeWriter
-            className="pl-6 font-bold text-white text-xl tracking-wider"
+            className="pl-6 font-semibold text-white text-xl tracking-wider"
             typing={1}
             numberOfLines={1}
           >
-            {title ? title.slice(0, 20) : param.title.slice(0, 20)}
+            {title ? title.slice(0, 25) : param.title.slice(0, 25)}
           </TypeWriter>
         </View>
 
