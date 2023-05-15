@@ -2,7 +2,11 @@
 
 Um aplicativo de chat onde você pode fazer **perguntas** e obter **respostas** usando a API do [ChatGPT](https://platform.openai.com/docs/introduction).  O aplicativo utiliza o[Async Storage](https://docs.expo.dev/versions/unversioned/sdk/async-storage/) para armazenar os chats, [NativeWind](https://github.com/native-ly/native-wind) para estilização e o [Moti](https://moti.fyi/) para animações.
 
-<img src="github/imgs/home.jpg" height="550" /> <img src="github/imgs/home-cards.jpg" height="550"/> <img src="github/imgs/chat.jpg" height="550" /> <img src="github/imgs/chat-message.jpg" height="550"/>
+## Home
+<img src="github/imgs/home.jpg" height="550" /> <img src="github/imgs/home-cards.jpg" height="550"/>
+
+## Chat
+<img src="github/imgs/chat.jpg" height="550" /> <img src="github/imgs/chat-message.jpg" height="550"/>
 
 ## 🚀 Tecnologias utilizadas
 
